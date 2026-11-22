@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Timeline Events Evidence Model",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "metadata",
+    "events"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "title",
+        "subtitle",
+        "updated_at"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date"
+        },
+        "verification_state": {
+          "enum": [
+            "verified",
+            "reference_transcription"
+          ]
+        },
+        "notice": {
+          "type": "string"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "publisher",
+          "title",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": [
+          "date",
+          "title",
+          "description"
+        ],
+        "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}(-[0-9]{2})?$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "enum": [
+              "confirmed",
+              "planned"
+            ]
+          },
+          "highlight": {
+            "type": "boolean"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "period",
+          "summary"
+        ]
+      }
+    },
+    "insights": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "description"
+        ]
+      }
+    }
+  }
+}

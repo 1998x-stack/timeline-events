@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "title": "中美贸易摩擦关键事件时间轴",
+    "subtitle": "历史阶段与时间节点演示；截至2025年5月13日，不代表最新进展。",
+    "updated_at": "2025-05-13",
+    "producer": "Timeline Events · 研究示例"
+  },
+  "sources": [
+    {
+      "id": "u1",
+      "publisher": "美国贸易代表办公室（USTR）",
+      "title": "President Trump Announces Strong Actions",
+      "url": "https://ustr.gov/about-us/policy-offices/press-office/press-releases/2018/march/president-trump-announces-strong"
+    },
+    {
+      "id": "u2",
+      "publisher": "美国国际贸易委员会（USITC）",
+      "title": "Special Topic: Section 232 and 301 Trade Actions in 2018",
+      "url": "https://www.usitc.gov/research_and_analysis/trade_shifts_2018/special_topic.htm"
+    },
+    {
+      "id": "u3",
+      "publisher": "美国联邦储备委员会",
+      "title": "Long-Run Effects on Chinese GDP from U.S.-China Tariff Hikes",
+      "url": "https://www.federalreserve.gov/econres/notes/feds-notes/long-run-effects-on-chinese-gdp-from-us-china-tariff-hikes-20190715.html"
+    },
+    {
+      "id": "u4",
+      "publisher": "美国贸易代表办公室（USTR）",
+      "title": "Phase One Economic and Trade Agreement Fact Sheet",
+      "url": "https://ustr.gov/sites/default/files/files/agreements/phase%20one%20agreement/US_China_Agreement_Fact_Sheet.pdf"
+    },
+    {
+      "id": "u5",
+      "publisher": "美国白宫",
+      "title": "Joint Statement on U.S.-China Economic and Trade Meeting in Geneva",
+      "url": "https://www.whitehouse.gov/briefings-statements/2025/05/joint-statement-on-u-s-china-economic-and-trade-meeting-in-geneva/"
+    }
+  ],
+  "events": [
+    {
+      "date": "2018-03-22",
+      "title": "301调查后宣布措施",
+      "description": "美方宣布依据301调查结果采取关税等行动。",
+      "source_ids": [
+        "u1"
+      ]
+    },
+    {
+      "date": "2018-07-06",
+      "title": "首轮关税生效",
+      "description": "美方对约340亿美元中国商品加征25%关税。",
+      "source_ids": [
+        "u2"
+      ]
+    },
+    {
+      "date": "2018-09-24",
+      "title": "关税覆盖扩大",
+      "description": "美方对约2000亿美元中国商品加征10%关税。",
+      "source_ids": [
+        "u3"
+      ]
+    },
+    {
+      "date": "2019-05-10",
+      "title": "税率上调",
+      "description": "美国把约2000亿美元商品税率从10%调至25%。",
+      "source_ids": [
+        "u3"
+      ]
+    },
+    {
+      "date": "2020-01-15",
+      "title": "第一阶段协议",
+      "description": "双方签署经贸协议，涉及知识产权与扩大采购。",
+      "source_ids": [
+        "u4"
+      ]
+    },
+    {
+      "date": "2025-05-12",
+      "title": "日内瓦联合声明",
+      "description": "双方宣布调整部分附加关税，暂缓90天。",
+      "source_ids": [
+        "u5"
+      ],
+      "highlight": true
+    }
+  ],
+  "phases": [
+    {
+      "name": "阶段一",
+      "period": "2018",
+      "summary": "301调查与首轮关税"
+    },
+    {
+      "name": "阶段二",
+      "period": "2019",
+      "summary": "关税升级与谈判"
+    },
+    {
+      "name": "阶段三",
+      "period": "2020—2024",
+      "summary": "协议执行与摩擦延续"
+    },
+    {
+      "name": "阶段四",
+      "period": "2025",
+      "summary": "日内瓦阶段性调整"
+    }
+  ],
+  "insights": [
+    {
+      "title": "关税与谈判并行",
+      "description": "关税升级与经贸磋商反复交织，事件并非线性推进。"
+    },
+    {
+      "title": "协议不等于零关税",
+      "description": "第一阶段协议并未全面取消原有全部关税。"
+    },
+    {
+      "title": "税率有适用范围",
+      "description": "2025年的调整涉及特定附加税率，并非所有商品的统一税率。"
+    }
+  ]
+}

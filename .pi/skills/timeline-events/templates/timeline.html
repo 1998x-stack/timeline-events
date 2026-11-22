@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>%%PAGE_TITLE%%</title>
+<meta name="description" content="%%PAGE_DESCRIPTION%%">
+<style>
+%%CSS%%
+</style>
+</head>
+<body>
+<main>
+  <div class="frame-shell" id="timeline-shell">
+    <div class="frame-viewport" id="timeline-viewport">
+      <article class="artboard" id="artboard" aria-label="事件时间轴信息图">
+        %%ARTBOARD%%
+      </article>
+    </div>
+    %%MOBILE%%
+  </div>
+  %%NOTES%%
+</main>
+<dialog class="event-dialog" id="event-detail" aria-labelledby="detail-title" aria-describedby="detail-description">
+  <div class="dialog-inner">
+    <div class="dialog-top"><p class="dialog-kicker">TIMELINE / 关键节点</p><button class="dialog-close" type="button" id="detail-close" aria-label="关闭事件详情">×</button></div>
+    <p class="dialog-date" id="detail-date"></p>
+    <h2 class="dialog-title" id="detail-title"></h2>
+    <p class="dialog-description" id="detail-description"></p>
+    <div class="dialog-reference" id="detail-references"></div>
+    <div class="dialog-nav"><button type="button" id="detail-previous">← 上一节点</button><span id="detail-counter" aria-live="polite"></span><button type="button" id="detail-next">下一节点 →</button></div>
+  </div>
+</dialog>
+<script type="application/json" id="timeline-event-data">%%TIMELINE_DATA%%</script>
+<script>
+(function(){
+  const stage=document.getElementById('artboard');
+  const viewport=document.getElementById('timeline-viewport');
+  if(!stage||!viewport)return;
+  function resize(){stage.style.transform='scale('+(viewport.clientWidth/2048)+')';}
+  resize();
+  if('ResizeObserver' in window) new ResizeObserver(resize).observe(viewport);
+  else window.addEventListener('resize',resize);
+})();
+</script>
+<script>
+%%INTERACTIONS%%
+</script>
+</body>
+</html>

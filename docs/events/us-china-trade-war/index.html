@@ -20,6 +20,45 @@
 .mobile-reader{display:none}.article-notes{max-width:1400px;margin:30px auto 55px;padding:26px 32px;background:#fff;border:1px solid #dae5e9;border-radius:14px;font-size:16px;line-height:1.8;color:#3a5260}.article-notes h2{font-size:20px;margin:0 0 12px}.article-notes .notice{border-left:4px solid #c92138;padding-left:15px}.article-notes a{color:#26749a}.article-notes .article-tools{display:flex;gap:14px;flex-wrap:wrap;margin-top:16px}.article-notes .article-tools a{padding:8px 14px;border:1px solid #b7cdd9;border-radius:8px;text-decoration:none}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 @media(max-width:760px){html{background:#fff}.frame-viewport{display:none}.mobile-reader{display:block;padding:26px 18px 16px;max-width:660px;margin:auto}.mobile-reader h1{font-size:27px;line-height:1.35;letter-spacing:-.02em}.mobile-reader .meta{font-size:13px;color:var(--muted);margin:9px 0 20px}.mobile-reader .mobile-summary{background:var(--bluewash);border:1px solid #c2dbe6;border-radius:12px;padding:16px 15px;font-size:18px;font-weight:700}.mobile-reader h2{font-size:20px;margin:28px 0 12px}.mobile-event-list{margin:0;padding:0 0 0 21px;list-style:none;border-left:3px solid #c6d8e1}.mobile-event-list li{margin-bottom:22px;position:relative;padding-left:15px}.mobile-event-list li:before{content:'';position:absolute;left:-29px;top:5px;width:13px;height:13px;border:3px solid white;border-radius:50%;background:var(--blue)}.mobile-event-list li:last-child:before{background:var(--red)}.mobile-event-list time{font-size:17px;font-weight:700;color:var(--blue)}.mobile-event-list li:last-child time{color:var(--red)}.mobile-event-list p{margin:6px 0 0;color:#2e4855;font-size:15px;line-height:1.6}.mobile-card{margin:9px 0;padding:12px 16px;border:1px solid #d7e4e9;background:#f5f9fb;border-radius:10px;font-size:14px}.mobile-card strong{display:block;margin-bottom:5px}.article-notes{margin:0 18px 35px;padding:18px;font-size:14px}}
 @media print{html,body{background:#fff}.frame-shell{width:2048px;max-width:none}.frame-viewport{width:2048px}.artboard{transform:none!important}.article-notes{break-before:page}}
+/* Tactile interaction layer: no changes to the resting screenshot's geometry. */
+:root{--ease-spring:cubic-bezier(.2,.85,.24,1)}
+.event-dot{padding:0;appearance:none;-webkit-appearance:none;cursor:pointer;box-shadow:0 0 0 0 rgba(58,133,173,0);transition:transform .28s var(--ease-spring),box-shadow .28s var(--ease-spring),background-color .2s}
+.event-dot:hover,.event.is-selected .event-dot{transform:translateX(-50%) scale(1.17);box-shadow:0 0 0 12px rgba(58,133,173,.12)}
+.event--highlight .event-dot:hover,.event--highlight.is-selected .event-dot{box-shadow:0 0 0 12px rgba(201,33,56,.12)}
+.event-dot:active{transform:translateX(-50%) scale(.91)}
+.event-dot:focus-visible{outline:5px solid #153847;outline-offset:7px}
+.mobile-event-action{border:1px solid #c4dce8;background:#edf7fb;color:#216b92;font:inherit;font-size:13px;font-weight:700;border-radius:18px;padding:7px 13px;cursor:pointer;margin-top:9px;transition:transform .22s var(--ease-spring),background .2s}
+.mobile-event-action:hover{background:#dbeef8;transform:translateY(-2px)}
+.mobile-event-action:active{transform:scale(.96)}
+.mobile-event-action:focus-visible{outline:3px solid #69b2d7;outline-offset:3px}
+.event-dialog{width:min(calc(100% - 32px),610px);max-height:min(86vh,740px);border:1px solid rgba(213,229,235,.9);border-radius:26px;padding:0;overflow:auto;background:rgba(255,255,255,.985);color:var(--ink);box-shadow:0 36px 105px rgba(15,47,66,.29);-webkit-backdrop-filter:blur(28px);backdrop-filter:blur(28px);animation:sheetAppear .35s var(--ease-spring) both}
+.event-dialog::backdrop{background:rgba(13,39,54,.30);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px)}
+.dialog-inner{padding:35px 38px 29px}
+.dialog-top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.dialog-kicker{font-size:12px;letter-spacing:.16em;color:var(--blue);font-weight:700;margin:0}
+.dialog-close{border:0;background:#eef3f6;color:#406274;border-radius:50%;width:40px;height:40px;font-size:24px;line-height:1;display:grid;place-items:center;cursor:pointer;transition:transform .2s var(--ease-spring),background .2s}
+.dialog-close:hover{background:#ddeaf0;transform:rotate(5deg)}
+.dialog-close:active{transform:scale(.9)}
+.dialog-close:focus-visible,.dialog-nav button:focus-visible{outline:3px solid #69b2d7;outline-offset:3px}
+.dialog-date{font-size:18px;color:var(--blue);margin:26px 0 8px;font-weight:700}
+.dialog-title{font-size:32px;line-height:1.26;letter-spacing:-.02em;margin:0 0 18px}
+.dialog-description{font-size:17px;line-height:1.9;margin:0;color:#425965}
+.dialog-reference{background:#f4f9fb;border:1px solid #deebf0;border-radius:14px;padding:17px 19px;margin-top:27px;font-size:13px;line-height:1.7;color:#617781}
+.dialog-reference h3{font-size:14px;margin:0 0 9px;color:var(--ink)}
+.dialog-reference a{display:block;margin-top:8px;color:#28749d;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.dialog-reference .detail-warning{margin:0}
+.dialog-nav{display:flex;align-items:center;justify-content:space-between;gap:15px;border-top:1px solid #e0eaf0;margin-top:25px;padding-top:22px}
+.dialog-nav button{border:1px solid #d2e2ea;background:#fff;border-radius:24px;color:var(--ink);padding:10px 18px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:transform .2s var(--ease-spring),background .2s}
+.dialog-nav button:hover:not(:disabled){background:#e9f4f9;transform:translateY(-2px)}
+.dialog-nav button:active:not(:disabled){transform:scale(.96)}
+.dialog-nav button:disabled{opacity:.35;cursor:not-allowed}
+.dialog-nav span{font-size:12px;color:#8499a4;font-weight:700;white-space:nowrap}
+@keyframes sheetAppear{from{opacity:0;transform:translateY(18px) scale(.975)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){.event-dialog{border-radius:22px}.dialog-inner{padding:24px 22px}.dialog-title{font-size:26px}.dialog-description{font-size:15px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media print{.event-dialog{display:none!important}}
+
+.event-dot::before{content:"";position:absolute;inset:-12px;border-radius:50%}
 
 </style>
 </head>
@@ -38,43 +77,43 @@
 <li class="event event--top" style="--x:139.0px" data-date="2018-07">
 <span class="event-date">2018.07</span>
 <p class="event-lines"><span>美对340亿美元商品</span><span>加征25%关税；中方</span><span>同步实施反制</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="0" aria-haspopup="dialog" aria-label="查看 2018.07 节点详情：首轮关税实施" title="点击查看事件详情"></button></li>
 <li class="event event--bottom" style="--x:336.778px" data-date="2019-05">
 <span class="event-date">2019.05</span>
 <p class="event-lines"><span>美将约2000亿美元</span><span>中国商品加征关税</span><span>由10%提高至25%</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="1" aria-haspopup="dialog" aria-label="查看 2019.05 节点详情：关税上调" title="点击查看事件详情"></button></li>
 <li class="event event--top" style="--x:534.556px" data-date="2020-01">
 <span class="event-date">2020.01</span>
 <p class="event-lines"><span>签署第一阶段</span><span>经贸协议；大部分</span><span>既有关税仍保留</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="2" aria-haspopup="dialog" aria-label="查看 2020.01 节点详情：签署第一阶段协议" title="点击查看事件详情"></button></li>
 <li class="event event--bottom" style="--x:732.333px" data-date="2024-05">
 <span class="event-date">2024.05</span>
 <p class="event-lines"><span>美公布301关税调整</span><span>对华电动车关税</span><span>拟提高至100%</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="3" aria-haspopup="dialog" aria-label="查看 2024.05 节点详情：301关税调整" title="点击查看事件详情"></button></li>
 <li class="event event--top" style="--x:930.111px" data-date="2025-04">
 <span class="event-date">2025.04</span>
 <p class="event-lines"><span>新一轮关税升级</span><span>美“对等”附加税125%</span><span>中方反制加征125%</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="4" aria-haspopup="dialog" aria-label="查看 2025.04 节点详情：新一轮关税升级" title="点击查看事件详情"></button></li>
 <li class="event event--bottom" style="--x:1127.889px" data-date="2025-05">
 <span class="event-date">2025.05</span>
 <p class="event-lines"><span>日内瓦：90天暂缓</span><span>双方部分加征关税</span><span>各降115个百分点</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="5" aria-haspopup="dialog" aria-label="查看 2025.05 节点详情：日内瓦磋商" title="点击查看事件详情"></button></li>
 <li class="event event--top" style="--x:1325.667px" data-date="2025-10">
 <span class="event-date">2025.10</span>
 <p class="event-lines"><span>吉隆坡联合安排</span><span>暂停部分关税与</span><span>非关税限制措施</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="6" aria-haspopup="dialog" aria-label="查看 2025.10 节点详情：吉隆坡联合安排" title="点击查看事件详情"></button></li>
 <li class="event event--bottom" style="--x:1523.444px" data-date="2026-02">
 <span class="event-date">2026.02</span>
 <p class="event-lines"><span>美国最高法院裁定</span><span>IEEPA不授权总统</span><span>据此征收关税</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="7" aria-haspopup="dialog" aria-label="查看 2026.02 节点详情：美国最高法院裁定" title="点击查看事件详情"></button></li>
 <li class="event event--top" style="--x:1721.222px" data-date="2026-09">
 <span class="event-date">2026.09</span>
 <p class="event-lines"><span>贸易理事会推进</span><span>各约300亿美元商品</span><span>对等降税框架</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="8" aria-haspopup="dialog" aria-label="查看 2026.09 节点详情：贸易理事会推进" title="点击查看事件详情"></button></li>
 <li class="event event--bottom event--highlight" style="--x:1919.0px" data-date="2026-11">
 <span class="event-date">2026.11</span>
 <p class="event-lines"><span>深圳APEC会晤</span><span>未达全面贸易协议</span><span>休战暂至2027.01.10</span></p><span class="connector" aria-hidden="true"></span>
-<span class="event-dot" aria-hidden="true"></span></li>
+<button type="button" class="event-dot" data-event-index="9" aria-haspopup="dialog" aria-label="查看 2026.11 节点详情：深圳APEC会晤" title="点击查看事件详情"></button></li>
 </ol>
 <section class="board-section phases-section"><h2>阶段划分</h2><div class="phase-grid">
 <article class="phase-card"><div class="phase-card-head"><span>阶段一</span><time>2018—2019</time></div><p>关税开打与扩围</p></article>
@@ -92,16 +131,16 @@
     </div>
     <article class="mobile-reader"><h1>中美贸易战时间轴：从加征关税到阶段性休战</h1><p class="meta">独立资料整理 · 2026-11-22</p>
 <div class="mobile-summary">2018.07—2026.11：8年4个月 · 十个关键节点 · 四个阶段</div><h2>关键事件</h2><ol class="mobile-event-list">
-<li><time datetime="2018-07">2018.07</time><p>美对340亿美元商品加征25%关税；中方同步实施反制</p></li>
-<li><time datetime="2019-05">2019.05</time><p>美将约2000亿美元中国商品加征关税由10%提高至25%</p></li>
-<li><time datetime="2020-01">2020.01</time><p>签署第一阶段经贸协议；大部分既有关税仍保留</p></li>
-<li><time datetime="2024-05">2024.05</time><p>美公布301关税调整，对华电动车关税拟提高至100%</p></li>
-<li><time datetime="2025-04">2025.04</time><p>新一轮关税升级；美“对等”附加税125%；中方反制加征125%</p></li>
-<li><time datetime="2025-05">2025.05</time><p>日内瓦：90天暂缓；双方部分加征关税各降115个百分点</p></li>
-<li><time datetime="2025-10">2025.10</time><p>吉隆坡联合安排，暂停部分关税与非关税限制措施</p></li>
-<li><time datetime="2026-02">2026.02</time><p>美国最高法院裁定IEEPA不授权总统据此征收关税</p></li>
-<li><time datetime="2026-09">2026.09</time><p>贸易理事会推进各约300亿美元商品对等降税框架</p></li>
-<li><time datetime="2026-11">2026.11</time><p>深圳APEC会晤未达全面贸易协议，休战暂至2027.01.10</p></li>
+<li><time datetime="2018-07">2018.07</time><p>美对340亿美元商品加征25%关税；中方同步实施反制</p><button type="button" class="mobile-event-action" data-event-index="0" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2019-05">2019.05</time><p>美将约2000亿美元中国商品加征关税由10%提高至25%</p><button type="button" class="mobile-event-action" data-event-index="1" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2020-01">2020.01</time><p>签署第一阶段经贸协议；大部分既有关税仍保留</p><button type="button" class="mobile-event-action" data-event-index="2" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2024-05">2024.05</time><p>美公布301关税调整，对华电动车关税拟提高至100%</p><button type="button" class="mobile-event-action" data-event-index="3" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2025-04">2025.04</time><p>新一轮关税升级；美“对等”附加税125%；中方反制加征125%</p><button type="button" class="mobile-event-action" data-event-index="4" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2025-05">2025.05</time><p>日内瓦：90天暂缓；双方部分加征关税各降115个百分点</p><button type="button" class="mobile-event-action" data-event-index="5" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2025-10">2025.10</time><p>吉隆坡联合安排，暂停部分关税与非关税限制措施</p><button type="button" class="mobile-event-action" data-event-index="6" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2026-02">2026.02</time><p>美国最高法院裁定IEEPA不授权总统据此征收关税</p><button type="button" class="mobile-event-action" data-event-index="7" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2026-09">2026.09</time><p>贸易理事会推进各约300亿美元商品对等降税框架</p><button type="button" class="mobile-event-action" data-event-index="8" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
+<li><time datetime="2026-11">2026.11</time><p>深圳APEC会晤未达全面贸易协议，休战暂至2027.01.10</p><button type="button" class="mobile-event-action" data-event-index="9" aria-haspopup="dialog">查看节点详情 <span aria-hidden="true">↗</span></button></li>
 </ol>
 <h2>阶段划分</h2>
 <section class="mobile-card"><strong>阶段一 · 2018—2019</strong>关税开打与扩围</section>
@@ -119,6 +158,17 @@
 <div class="article-tools"><a href="../../index.html">返回时间轴资料库首页</a><a href="#timeline-shell">返回图片</a></div>
 </aside>
 </main>
+<dialog class="event-dialog" id="event-detail" aria-labelledby="detail-title" aria-describedby="detail-description">
+  <div class="dialog-inner">
+    <div class="dialog-top"><p class="dialog-kicker">TIMELINE / 关键节点</p><button class="dialog-close" type="button" id="detail-close" aria-label="关闭事件详情">×</button></div>
+    <p class="dialog-date" id="detail-date"></p>
+    <h2 class="dialog-title" id="detail-title"></h2>
+    <p class="dialog-description" id="detail-description"></p>
+    <div class="dialog-reference" id="detail-references"></div>
+    <div class="dialog-nav"><button type="button" id="detail-previous">← 上一节点</button><span id="detail-counter" aria-live="polite"></span><button type="button" id="detail-next">下一节点 →</button></div>
+  </div>
+</dialog>
+<script type="application/json" id="timeline-event-data">{"events":[{"date":"2018-07","title":"首轮关税实施","description":"美对340亿美元商品加征25%关税；中方同步实施反制","lines":["美对340亿美元商品","加征25%关税；中方","同步实施反制"]},{"date":"2019-05","title":"关税上调","description":"美将约2000亿美元中国商品加征关税由10%提高至25%","lines":["美将约2000亿美元","中国商品加征关税","由10%提高至25%"]},{"date":"2020-01","title":"签署第一阶段协议","description":"签署第一阶段经贸协议；大部分既有关税仍保留","lines":["签署第一阶段","经贸协议；大部分","既有关税仍保留"]},{"date":"2024-05","title":"301关税调整","description":"美公布301关税调整，对华电动车关税拟提高至100%","lines":["美公布301关税调整","对华电动车关税","拟提高至100%"]},{"date":"2025-04","title":"新一轮关税升级","description":"新一轮关税升级；美“对等”附加税125%；中方反制加征125%","lines":["新一轮关税升级","美“对等”附加税125%","中方反制加征125%"]},{"date":"2025-05","title":"日内瓦磋商","description":"日内瓦：90天暂缓；双方部分加征关税各降115个百分点","lines":["日内瓦：90天暂缓","双方部分加征关税","各降115个百分点"]},{"date":"2025-10","title":"吉隆坡联合安排","description":"吉隆坡联合安排，暂停部分关税与非关税限制措施","lines":["吉隆坡联合安排","暂停部分关税与","非关税限制措施"]},{"date":"2026-02","title":"美国最高法院裁定","description":"美国最高法院裁定IEEPA不授权总统据此征收关税","lines":["美国最高法院裁定","IEEPA不授权总统","据此征收关税"]},{"date":"2026-09","title":"贸易理事会推进","description":"贸易理事会推进各约300亿美元商品对等降税框架","lines":["贸易理事会推进","各约300亿美元商品","对等降税框架"]},{"date":"2026-11","title":"深圳APEC会晤","description":"深圳APEC会晤未达全面贸易协议，休战暂至2027.01.10","lines":["深圳APEC会晤","未达全面贸易协议","休战暂至2027.01.10"],"highlight":true}],"sources":[],"verification_state":"reference_transcription"}</script>
 <script>
 (function(){
   const stage=document.getElementById('artboard');
@@ -129,6 +179,81 @@
   if('ResizeObserver' in window) new ResizeObserver(resize).observe(viewport);
   else window.addEventListener('resize',resize);
 })();
+</script>
+<script>
+'use strict';
+(function(){
+  const payload=document.getElementById('timeline-event-data');
+  const sheet=document.getElementById('event-detail');
+  if(!payload||!sheet||!('showModal' in sheet))return;
+  let model;
+  try{model=JSON.parse(payload.textContent);}catch(error){console.warn('Timeline data malformed',error);return;}
+  const events=model.events||[];
+  const sources=new Map((model.sources||[]).map(source=>[source.id,source]));
+  const $=id=>document.getElementById(id);
+  const title=$('detail-title'),date=$('detail-date'),description=$('detail-description');
+  const references=$('detail-references'),counter=$('detail-counter');
+  const previous=$('detail-previous'),next=$('detail-next'),close=$('detail-close');
+  let selected=-1,restoreFocus=null;
+
+  function showEvent(index){
+    if(index<0||index>=events.length)return;
+    selected=index;
+    const event=events[index];
+    date.textContent=event.date;
+    title.textContent=event.title;
+    description.textContent=event.description;
+    counter.textContent=(index+1)+' / '+events.length;
+    previous.disabled=index===0;
+    next.disabled=index===events.length-1;
+    references.replaceChildren();
+    if(model.verification_state==='reference_transcription'){
+      const warning=document.createElement('p');
+      warning.className='detail-warning';
+      warning.textContent='原图内容转录 · 未经独立事实审计。此处只展示参考图中已有的文字。';
+      references.append(warning);
+    }else{
+      const label=document.createElement('h3');label.textContent='关联资料';references.append(label);
+      let count=0;
+      for(const id of event.source_ids||[]){
+        const source=sources.get(id);if(!source)continue;
+        const a=document.createElement('a');
+        a.href=source.url;
+        a.target='_blank';a.rel='noopener noreferrer';
+        a.textContent=source.publisher+' · '+source.title+' ↗';
+        references.append(a);count++;
+      }
+      if(!count){const note=document.createElement('p');note.textContent='该节点暂无可展示的来源链接。';references.append(note);}
+    }
+    document.querySelectorAll('.event').forEach((node,i)=>node.classList.toggle('is-selected',i===index));
+  }
+  function openEvent(index,trigger){
+    if(!sheet.open){restoreFocus=trigger;sheet.showModal();}
+    showEvent(index);
+    close.focus({preventScroll:true});
+  }
+  document.querySelectorAll('[data-event-index]').forEach(button=>{
+    button.addEventListener('click',()=>openEvent(Number(button.dataset.eventIndex),button));
+  });
+  previous.addEventListener('click',()=>{showEvent(selected-1);previous.focus();});
+  next.addEventListener('click',()=>{showEvent(selected+1);next.focus();});
+  close.addEventListener('click',()=>sheet.close());
+  sheet.addEventListener('click',event=>{
+    if(event.target!==sheet)return;
+    const bounds=sheet.getBoundingClientRect();
+    if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)sheet.close();
+  });
+  sheet.addEventListener('keydown',event=>{
+    if(event.key==='ArrowLeft' && selected>0){event.preventDefault();showEvent(selected-1);}
+    if(event.key==='ArrowRight' && selected<events.length-1){event.preventDefault();showEvent(selected+1);}
+  });
+  sheet.addEventListener('close',()=>{
+    selected=-1;
+    document.querySelectorAll('.event.is-selected').forEach(node=>node.classList.remove('is-selected'));
+    if(restoreFocus && document.contains(restoreFocus))restoreFocus.focus({preventScroll:true});
+  });
+})();
+
 </script>
 </body>
 </html>

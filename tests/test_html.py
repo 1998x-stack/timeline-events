@@ -12,7 +12,7 @@ import render_html as renderer
 
 class HtmlTests(unittest.TestCase):
     def setUp(self):
-        self.data=json.loads((ROOT/'examples/reference-image-transcription.json').read_text(encoding='utf-8'))
+        self.data=json.loads((ROOT/'skills/timeline-events/examples/reference-image-transcription.json').read_text(encoding='utf-8'))
 
     def test_original_content_and_layout(self):
         html=renderer.render_html(self.data,reference=True)
@@ -64,7 +64,7 @@ class HtmlTests(unittest.TestCase):
     def test_reference_cli_success(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=Path(tmp)/'example.html'
-            code=renderer.main([str(ROOT/'examples/reference-image-transcription.json'),'--reference-transcription','--output',str(p)])
+            code=renderer.main([str(ROOT/'skills/timeline-events/examples/reference-image-transcription.json'),'--reference-transcription','--output',str(p)])
             self.assertEqual(code,0)
             self.assertIn('<html lang="zh-CN">',p.read_text(encoding='utf-8'))
 
@@ -86,3 +86,41 @@ class HtmlTests(unittest.TestCase):
 
 if __name__=='__main__':
     unittest.main()
+
+# Interaction guards: keep the generator, checked-in page, and accessibility in sync.
+class MotionTests(unittest.TestCase):
+    def setUp(self):
+        self.data=json.loads((ROOT/'skills/timeline-events/examples/reference-image-transcription.json').read_text(encoding='utf-8'))
+
+    def test_all_nodes_interactive_without_hiding_story(self):
+        html=renderer.render_html(self.data,reference=True)
+        self.assertEqual(html.count('aria-haspopup="dialog"'),20)
+        self.assertEqual(html.count('class="event-dot"'),10)
+        self.assertEqual(html.count('class="mobile-event-action"'),10)
+        self.assertIn('class="event-dialog"',html)
+        self.assertIn('id="detail-previous"',html)
+        self.assertIn('id="detail-next"',html)
+        self.assertIn('aria-labelledby="detail-title"',html)
+        self.assertIn('未经独立事实审计',html)
+
+    def test_json_data_is_safe_to_embed_in_script(self):
+        self.data['events'][0]['description']='恶意</script><script>alert(1)</script>内容'
+        html=renderer.render_html(self.data,reference=True)
+        self.assertNotIn('恶意</script><script>',html)
+        self.assertIn('\\u003c/script\\u003e',html)
+        self.assertIn('恶意&lt;/script&gt;',html)
+
+    def test_template_contains_reduced_motion_and_keyboard(self):
+        css=(ROOT/'skills/timeline-events/templates/timeline.css').read_text(encoding='utf-8')
+        js=(ROOT/'skills/timeline-events/templates/timeline.interactions.js').read_text(encoding='utf-8')
+        self.assertIn('prefers-reduced-motion:reduce',css)
+        self.assertIn('ArrowLeft',js)
+        self.assertIn('ArrowRight',js)
+        self.assertIn("event.key",js)
+        self.assertIn("restoreFocus.focus",js)
+        self.assertNotIn('innerHTML=',js)
+
+    def test_deployed_page_matches_generator(self):
+        expected=renderer.render_html(self.data,reference=True,site_url='../../index.html')
+        actual=(ROOT/'docs/events/us-china-trade-war/index.html').read_text(encoding='utf-8')
+        self.assertEqual(actual,expected)

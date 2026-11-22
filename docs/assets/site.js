@@ -4,6 +4,13 @@
   let catalog = {taxonomies: [], events: []};
   let selected = 'all';
   let query = '';
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const revealObserver = ('IntersectionObserver' in window && !reducedMotion.matches) ? new IntersectionObserver(entries => {
+    for(const entry of entries){
+      if(entry.isIntersecting){entry.target.classList.add('in-view');revealObserver.unobserve(entry.target);}
+    }
+  }, {threshold:.08,rootMargin:'0px 0px -24px 0px'}) : null;
+  function reveal(node){if(revealObserver){node.classList.add('reveal');revealObserver.observe(node);}}
   const statusLabels = {reference_transcription:'原图复刻 · 尚未核验',verified:'已完成资料审校'};
 
   function el(tag, className, text){
@@ -35,7 +42,9 @@
     $('catalog-empty').hidden=entries.length>0;
     for(const entry of entries){
       const category=catalog.taxonomies.find(x=>x.id===entry.category);
-      const card=el('article','catalog-card');
+      const card=el('a','catalog-card');
+      card.href=entry.url;
+      card.setAttribute('aria-label',entry.title+'，打开可交互时间轴');
       const media=el('div','catalog-card-media');
       const graphic=el('div','card-graphic');
       graphic.append(el('small','', 'EVENT STUDY / '+entry.range));
@@ -50,22 +59,29 @@
       body.append(meta,el('h3','',entry.title),el('p','',entry.description));
       const foot=el('div','card-foot');
       foot.append(el('span','status-unverified',statusLabels[entry.status]||'待确认'));
-      const link=el('a','card-link','查看时间轴 ↗');
-      link.href=entry.url;
-      foot.append(link);body.append(foot);card.append(media,body);root.append(card);
+      const link=el('span','card-link','查看时间轴 ↗');
+      foot.append(link);body.append(foot);card.append(media,body);root.append(card);reveal(card);
     }
   }
   function renderTaxonomy(){
     const root=$('taxonomy');root.replaceChildren();
     for(const tax of catalog.taxonomies){
       const count=catalog.events.filter(ev=>ev.category===tax.id).length;
-      const card=el('article','taxonomy-card');
-      const top=el('div','taxonomy-top');
+      const card=el('button','taxonomy-card');
+      card.type='button';
+      card.setAttribute('aria-label','筛选'+tax.name+'分类的事件');
+      card.addEventListener('click',()=>{
+        selected=tax.id;query='';$('catalog-search').value='';
+        renderFilters();renderCards();
+        $('explore').scrollIntoView({behavior:reducedMotion.matches?'auto':'smooth',block:'start'});
+        requestAnimationFrame(()=>document.querySelector('.filter-pill[aria-pressed=true]')?.focus({preventScroll:true}));
+      });
+      const top=el('span','taxonomy-top');
       top.append(el('span','taxonomy-symbol',tax.symbol),el('span','taxonomy-count',count+' 个已发布'));
-      card.append(top,el('h3','',tax.name),el('p','',tax.description));
-      const tags=el('div','taxonomy-tags');
+      card.append(top,el('span','taxonomy-heading',tax.name),el('span','taxonomy-description',tax.description));
+      const tags=el('span','taxonomy-tags');
       for(const t of tax.tags)tags.append(el('span','',t));
-      card.append(tags);root.append(card);
+      card.append(tags);root.append(card);reveal(card);
     }
   }
   async function loadCatalog(){
@@ -106,14 +122,42 @@
   });
   $('copy-prompt').addEventListener('click',async()=>{
     const ta=$('generated-prompt');
-    try{await navigator.clipboard.writeText(ta.value);$('copy-status').textContent='已复制任务指令。';}
+    try{await navigator.clipboard.writeText(ta.value);$('copy-status').textContent='已复制任务指令。';$('copy-prompt').textContent='✓ 已复制';setTimeout(()=>{$('copy-prompt').textContent='复制指令';},1500);}
     catch{ta.focus();ta.select();$('copy-status').textContent='浏览器不支持自动复制，请选中后手动复制。';}
   });
   for(const button of document.querySelectorAll('.example-subject')){
-    button.addEventListener('click',()=>{$('prompt-topic').value=button.dataset.subject;document.getElementById('create').scrollIntoView({behavior:'smooth'});$('prompt-topic').focus({preventScroll:true});});
+    button.addEventListener('click',()=>{$('prompt-topic').value=button.dataset.subject;document.getElementById('create').scrollIntoView({behavior:reducedMotion.matches?'auto':'smooth'});$('prompt-topic').focus({preventScroll:true});});
   }
   const menu=$('menu-toggle');
   menu.addEventListener('click',()=>{const list=$('mobile-nav');const visible=list.hidden;list.hidden=!visible;menu.setAttribute('aria-expanded',String(visible));});
   for(const a of document.querySelectorAll('#mobile-nav a'))a.addEventListener('click',()=>{$('mobile-nav').hidden=true;menu.setAttribute('aria-expanded','false');});
+  // Intentional motion: reveal content once, not during every scroll frame.
+  if(revealObserver){
+    document.documentElement.classList.add('motion-ready');
+    for(const node of document.querySelectorAll('.hero-copy,.hero-visual,.section-header,.process-grid article,.create-copy,.create-form'))reveal(node);
+  }
+  // Subtle editorial cover parallax, only for fine pointers and full-motion users.
+  const visual=document.querySelector('.hero-visual');
+  if(visual && !reducedMotion.matches && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    visual.addEventListener('pointermove',event=>{
+      const rect=visual.getBoundingClientRect();
+      const x=(event.clientX-rect.left)/rect.width-.5;
+      const y=(event.clientY-rect.top)/rect.height-.5;
+      visual.style.setProperty('--cover-ry',(x*4).toFixed(2)+'deg');
+      visual.style.setProperty('--cover-rx',(-y*3).toFixed(2)+'deg');
+    },{passive:true});
+    visual.addEventListener('pointerleave',()=>{visual.style.setProperty('--cover-ry','0deg');visual.style.setProperty('--cover-rx','0deg');});
+  }
+  const progress=document.querySelector('.scroll-progress');
+  const masthead=document.querySelector('.masthead');
+  let scheduled=false;
+  function updateScroll(){
+    const height=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+    if(progress)progress.style.transform='scaleX('+Math.min(1,window.scrollY/height)+')';
+    masthead?.classList.toggle('is-scrolled',window.scrollY>22);
+    scheduled=false;
+  }
+  window.addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(updateScroll);}},{passive:true});
+  updateScroll();
   loadCatalog();
 })();

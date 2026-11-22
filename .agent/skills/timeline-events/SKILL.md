@@ -1,146 +1,72 @@
 ---
 name: timeline-events
-description: 将一个历史、政策、外交、财经、科技或社会事件转化为可审计的中文时间轴网页。自动规划研究、检索及交叉核验关键节点、建立 JSON 证据链、生成可编辑且响应式的独立 HTML；可同时生成 SVG/PNG，并在具备仓库授权时发布到 GitHub Pages。触发示例：把中美贸易战做成时间轴HTML、某事件发展历程网页、参考图片的时间轴复刻、建立事件图谱并发布。
+description: 输入历史、政策、外交、财经、科技或社会事件，检索核验并生成中文版式精确、可交互的时间轴 HTML；支持参考图片高保真复刻、SVG/PNG 导出和证据链。适用于“做事件时间线网页”“把图片复刻为HTML”“Apple风格点击时间轴”。
 ---
 
-# Timeline Events｜从一个事件到可审计的时间轴 HTML
+# Timeline Events · 事件研究与交互时间轴
 
-> **目标**：用户只提供一个事件名称，即研究、建模、校验、生成 HTML 网页；不是仅返回设计建议或一段绘图提示词。
->
-> **底线**：事实模型与视觉模型分离。没有证据的数据不能用排版掩盖。`--reference-transcription` 用于忠实复刻用户图片的原始文字，并明确标记未经核验，绝不可冒称完成研究。
+**触发**：用户只说一个事件名称、一个事件主题或给一张时间轴参考图，期待真正生成 HTML / SVG / PNG，而不是仅得到提示词。
 
-## 1. 任务路由
+**运行环境**：Python 3.10+。本 SKILL 目录必须包含自身的 `scripts/`、`templates/`、`schemas/`、`references/` 与 `examples/`。允许从任何仓库根或任意工作目录运行。
 
-先判断用户输入属于哪一类：
+## 先判断工作模式
 
-| 模式 | 用户说法 | 事实处理 | 输出 |
-|---|---|---|---|
-| `research`（默认） | “中美贸易战，做一个时间轴 HTML” | 检索原始资料、交叉验证、逐节点 URL 映射 | HTML + sources.md；如需再导出 SVG/PNG |
-| `transcription` | “把我这张时间轴图转成一模一样的 HTML” | 忠实转录图片内容，不擅自更正或补写；声明**未独立核验** | 版式还原 HTML、原图对照和核验提示 |
-| `update` | “给已发布网页追加最新进展” | 读旧 JSON、查最新事件，只增修有证据事实、保留变更记录 | 新 HTML、证据差异、验证报告 |
-| `publish` | “发布到 GitHub Pages” | 完成质量门禁后更新 `docs/` 目录与 `catalog.json` | Pages 站点、提交和 CI 状态 |
+- `research`（默认）：独立检索事实、阅读原文、建证据链；产出结构化 JSON、HTML、来源说明。
+- `transcription`：仅按用户所给参考图忠实复刻，**明确未经独立核验**；不能把参考图写成研究事实。
+- `update`：读取旧数据，对新增节点和政策状态做再核验，保留修订信息并重新生成。
+- `publish`：在用户明确要求发布时，先遵守目标仓库 `AGENTS.md`，然后更新网站与目录，检查 CI 和 Pages。
 
-**默认语言**：简体中文。**输入最简**：事件名称。可选输入：起止日期、区域、读者、节点数量 4–10、设计参考、主色调、输出格式、是否公开发布。
+## 完整流水线
 
-## 2. 主题研究计划
+1. **Scope**：界定主题、起止时间、参与方、读者和截止日期；可选配色、节点数不影响启动任务。
+2. **Research**：原始协议、政府公告、裁判文书、论文和一手数据库优先，辅助新闻交叉核验；不得凭印象编日期或数字。阅读 `references/evidence-policy.md`、`references/source-governance.md`。
+3. **Edit**：选取 4–10 个转折节点，按真实日期升序；记录主体、状态、简短标题、可核实描述及 URL。生成满足 `schemas/timeline.schema.json` 的 JSON。
+4. **Render**：HTML 为第一产物；生成器只渲染结构化数据，不自行编造资料。模板位于 `templates/`，图片使用 `scripts/timeline_events.py`。
+5. **Review**：核对原始来源与每个断言；检测 XSS 转义、文字溢出、手机纵轴、键盘焦点、动效关闭、来源披露与页面无 JS 可读性。
+6. **Deliver**：交付 HTML + JSON + 证据；若请求 SVG/PNG 再生成；仅在被授权且测试通过后发布 Pages。
 
-1. 定义事件边界、关键参与方、时间范围、实际截止日期。相对日期在执行当日落实为绝对日期。
-2. 从可能转折建立搜索关键词：启动、宣布、实施、生效、升级、协议、暂停、恢复、终止、裁定、实施效果。
-3. 首选原始官方公告、协议正文、法律裁判、交易所文件、企业公告、论文和可复现统计表；使用媒体补充背景与时间。
-4. 为每个候选节点记录 `date / actor / action / status / source_ids / uncertainty`；遇到争议数字、税率或影响分析时检索第二个**独立**来源。
-5. 建立反证检查：官方表述是否单方主张、报道日是否误作生效日、总关税是否误作某一附加税率、签署是否被写成执行、预测是否被写成已发生。
-6. 只选 4–10 个最具解释力的事件。超过 10 个则提出分卷或分段，不因密集而将文字缩为不可读大小。
-7. 不允许把检索引擎结果摘要当作已经读过的材料；尽可能直接打开原始资料，确认标题、时间、关键词和口径。
+## 如何调用（路径以当前 SKILL.md 所在目录为准）
 
-**证据不可得时**：只生成待核验数据草稿，或在有用户上传参考图片时使用 `transcription`；明确不能把后者当作“事实调查完成”。
-
-## 3. 数据模型与文件命名
-
-研究模式使用仓库 `schemas/timeline.schema.json`：
-
-```json
-{
-  "metadata": {"title":"事件标题", "subtitle":"摘要", "updated_at":"2026-11-22", "producer":"署名"},
-  "sources": [{"id":"s1", "publisher":"原始机构", "title":"原文标题", "url":"https://..."}],
-  "events": [
-    {"date":"2020-01-15", "title":"短标题", "description":"可核验的一句话", "source_ids":["s1"]}
-  ],
-  "phases": [{"name":"阶段一", "period":"2018—2019", "summary":"阶段归纳"}],
-  "insights": [{"title":"关键口径", "description":"对读图误区作解释"}]
-}
-```
-
-约束：
-- 4–10 个节点，时间升序，`YYYY-MM` 或 `YYYY-MM-DD`；未知精确日不要猜。
-- 每个真实节点至少一个 `source_ids`，必须指向真实 `sources`。日期和语义要由 Agent 比对原文确认；CLI 只做形式校验。
-- `status=planned` 的未来计划必须标为尚未发生；最后一个事件可 `highlight=true`，**红色不意味着已完全成功**。
-- 如果图文不清晰，先编辑精简标题或分图，绝不能截断核心事实。
-- `metadata.updated_at` 是**事实核查截止日**，不是渲染脚本运行日期。
-- `metadata` 和 `events` 的自由文本不可含 HTML；渲染器会进行 HTML 转义，禁止关闭转义。
-
-复刻模式专用 `examples/reference-image-transcription.json`：保留图中文字的 `lines` 来精准控制换行，并在 `metadata.verification_state` 中显式声明 `reference_transcription`；`metadata.notice` 必填。参考图本身给出的“机构名单”并非逐条可点击原始证据，未经核验就不能填入研究模式的 `sources` 假装真实引文。
-
-## 4. 渲染：HTML 为第一产物
-
-在仓库根目录，先运行：
+设 `SKILL_DIR` 是加载的 `SKILL.md` 所在文件夹，不是调用者当前工作目录。可在 shell 中设置：
 
 ```bash
-python scripts/render_html.py data/<slug>.json \
-  --output dist/<slug>/index.html
+SKILL_DIR=/absolute/path/to/timeline-events
+python "$SKILL_DIR/scripts/render_html.py" "$SKILL_DIR/examples/reference-image-transcription.json" \
+  --reference-transcription --output dist/reference/index.html
+python "$SKILL_DIR/scripts/render_html.py" "$SKILL_DIR/examples/us-china-trade-war-verified.json" \
+  --output dist/verified/index.html
+python -m pip install CairoSVG
+python "$SKILL_DIR/scripts/timeline_events.py" "$SKILL_DIR/examples/us-china-trade-war-verified.json" \
+  --output dist/verified/timeline --format both
 ```
 
-生成 HTML 的要求：
-- **单文件独立**：内联 CSS、正文全部是真实 DOM 文本；浏览器无 JS 时仍可读正文。JS 只用于响应式缩放，不负责加载故事内容。
-- **原版风格**：2048×1280 白底信息图；顶部深蓝标题/分割线/灰色副标题，浅蓝阶段跨度卡，深蓝主轴；事件上下交错；历史蓝点，末端红点；四阶段卡、三个阅读提示、底部来源和等距提醒。
-- **响应式**：桌面保持参考图位置关系；窄屏改为垂直事件列表，避免缩得无法阅读。
-- **语义与无障碍**：h1/h2、article/section、ol、time、足够的对比度、可选择与复制的文字、移动端可聚焦链接。
-- **事实披露**：生成页必须有可见的证据说明或转录免责声明，不得只在注释里写“未核验”。
+对于一个**新事件**：先调查并写 `data/<slug>.json`，再将上述输入路径替换成该文件。命令行不会自动联网检索。`metadata.updated_at` 表示核验截止日期，不得作为虚假的实时更新时间。
 
-用户给图片、要求视觉一模一样时：
+## HTML 与 Apple-inspired 动效
+
+- 页面自包含，CSS/JS 内联，核心正文为真实 DOM；不依赖第三方 CDN。
+- 2048×1280 横版白底财经时间轴，深蓝主轴、蓝红节点、四阶段与提示卡；手机改纵向原生阅读布局。
+- 圆点为按钮，点击原生详情 `<dialog>`；支持左右键、Esc、焦点返回和来源链接。
+- 首页卡片微抬、按压回弹、分类点击筛选；不要用动画掩盖信息。
+- `prefers-reduced-motion: reduce` 必须有效；禁用 JS 时正文仍然完整展示。
+- 具体规则阅读 `references/html-design-spec.md` 和 `references/motion-design-spec.md`。
+
+## 证据边界
+
+- 研究模式每条事件至少有一个已阅原始来源 `source_ids`；重要争议尽量两源比对。
+- 转录模式需要 `metadata.verification_state=reference_transcription` 和明确的 `metadata.notice`，调用时加 `--reference-transcription`。
+- **静态资料合法不代表来源支持内容**：`schemas` 与 CLI 验证不能代替人工语义核验。
+- 未来事件必须显式标计划，最新节点红色仅是视觉强调，不能写成冲突结束。
+
+## 校验门禁
+
+从项目根（如有）执行 `python -m unittest discover -s tests -v`；通用 Skill 只需验证：
 
 ```bash
-python scripts/render_html.py examples/reference-image-transcription.json \
-  --reference-transcription \
-  --output dist/reference/index.html
+python "$SKILL_DIR/scripts/render_html.py" "$SKILL_DIR/examples/us-china-trade-war-verified.json" \
+  --output /tmp/timeline-research.html
+python "$SKILL_DIR/scripts/render_html.py" "$SKILL_DIR/examples/reference-image-transcription.json" \
+  --reference-transcription --output /tmp/timeline-reference.html
 ```
 
-**禁止**在正式研究出版流程中使用 `--reference-transcription` 绕过缺少证据的错误。这样生成的页面必须在站点目录用“原图复刻 · 尚未核验”标注。
-
-## 5. 可选：导出其他格式
-
-研究模式可继续用已有的 SVG/PNG 渲染器：
-
-```bash
-python -m pip install -r requirements.txt
-python scripts/timeline_events.py data/<slug>.json \
-  --output dist/<slug>/timeline --format both
-```
-
-输出：`index.html`、`timeline.svg`、`timeline.png`、`timeline.sources.md`。注意旧 PNG 渲染器和新 HTML 渲染器目前是独立版式实现，不能声称像素完全相同。HTML 的精确视觉基准见 `references/html-design-spec.md`。
-
-## 6. 内容分类及发布
-
-六大类见 `references/site-architecture.md`，首页正式数据在 `docs/data/catalog.json`。发布一个新页面的顺序：
-
-1. 采用规范化 slug（如 `us-china-trade-war`），将**已核验**数据放入 `data/<slug>.json`，生成 `docs/events/<slug>/index.html`。
-2. 编辑 `docs/data/catalog.json`，添加真实存在的条目。`status` 只能按实际状态填写 `verified` 或 `reference_transcription`；不得把未核验示例标为验证完成。
-3. 使用正确的相对路径 `./events/<slug>/`，适配项目子路径 `/timeline-events/`。分类标签需来自既定 taxonomy id。
-4. 发布前执行测试、网页 DOM 结构检查、链接检查、移动端和桌面视觉检查。
-5. 提交并运行 GitHub Actions，部署后实际请求公开 Pages URL 验证；成功部署日志 **不等于**公开站点可访问。
-6. 若 Pages 未启用或 GitHub 权限不够，明确告知需要在仓库 Settings → Pages 将 Source 设为 GitHub Actions；默认 GITHUB_TOKEN 无法首次开启 Pages。不得谎称站点已上线。
-
-**仓库路径**：
-- `.pi/skills/timeline-events/SKILL.md`
-- `.agent/skills/timeline-events/SKILL.md`
-
-两份 SKILL 正文必须逐字节相同，使用 `python scripts/verify_skill_sync.py` 校验。全部执行细则在根目录 `AGENTS.md`。
-
-## 7. 质量门禁 / Definition of Done
-
-```bash
-python -m unittest discover -s tests -v
-python scripts/verify_skill_sync.py
-python scripts/render_html.py examples/reference-image-transcription.json --reference-transcription --output dist/reference/index.html
-```
-
-检查：
-- [ ] 事件日期顺序/具体状态/数字口径/URL 来源对应且原文可验证
-- [ ] 资料截止时间准确；未来事项非事实化；争议与单方主张有标注
-- [ ] 2048×1280 布局中 10 个节点无重叠，文字不被裁剪，简体中文清晰
-- [ ] 窄屏事件列表按时间排列，全文可阅读；键盘操作可用
-- [ ] HTML 单文件离线可阅读，内容经 HTML 转义，不插入用户脚本
-- [ ] 参考转录模式必须标记“未核验”且不出现在验证完成筛选里
-- [ ] 首页分类数量来自 catalog，不虚增条目，搜索筛选和提示词复制可用
-- [ ] 现有 SVG/PNG 功能及测试未被破坏
-- [ ] CI 全绿、Pages 部署状态与真实公网打开状态分别记录
-
-## 8. 使用者交付清单
-
-向用户提供：完整 HTML 链接或文件、研究数据截止日、SVG/PNG（如请求）、来源列表或来源文档、发布到哪个仓库/分支/提交、CI 与 Pages 真实状态、无法核实的限制事项。不要说“后台会自动更新”——除非确实创建有调度器与可运行的数据流水线。
-
-## 9. 延伸设计参考
-
-- `references/html-design-spec.md`：与用户参考图的坐标/排版规范、响应式行为
-- `references/site-architecture.md`：首页内容层级、分类与检索策略、目录统计口径
-- `references/source-governance.md`：事实与来源质量、可核验性、发布审批
-- `AGENTS.md`：工作分工、编码规则、内容生命周期、CI / Pages 运维
+仅在运行实际成功后向用户声称生成完成；如不能进行浏览器交互测试，需单独说明。发布 Pages 时再阅读 `references/site-integration.md` 和仓库根 `AGENTS.md`。

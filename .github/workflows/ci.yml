@@ -26,13 +26,15 @@ jobs:
       - name: Validate site and relative links
         run: python scripts/check_site.py
       - name: Validate JavaScript syntax
-        run: node --check docs/assets/site.js
+        run: |
+          node --check docs/assets/site.js
+          node --check skills/timeline-events/templates/timeline.interactions.js
       - name: Render reference HTML and researched HTML
         run: |
-          python scripts/render_html.py examples/reference-image-transcription.json --reference-transcription --output dist/reference/index.html
-          python scripts/render_html.py examples/us-china-trade-war-verified.json --output dist/verified/index.html
+          python scripts/render_html.py skills/timeline-events/examples/reference-image-transcription.json --reference-transcription --output dist/reference/index.html
+          python scripts/render_html.py skills/timeline-events/examples/us-china-trade-war-verified.json --output dist/verified/index.html
       - name: Render existing SVG/PNG engine
-        run: python scripts/timeline_events.py examples/us-china-trade-war-verified.json --output dist/verified/timeline --format both
+        run: python scripts/timeline_events.py skills/timeline-events/examples/us-china-trade-war-verified.json --output dist/verified/timeline --format both
       - name: Verify all outputs exist
         run: |
           test -s dist/reference/index.html

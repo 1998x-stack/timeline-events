@@ -29,3 +29,15 @@ class SiteTests(unittest.TestCase):
 
 if __name__=='__main__':
     unittest.main()
+
+class HomepageMotionTests(unittest.TestCase):
+    def test_accessible_card_and_category_interactions(self):
+        js=(ROOT/'docs/assets/site.js').read_text(encoding='utf-8')
+        html=(ROOT/'docs/index.html').read_text(encoding='utf-8')
+        css=(ROOT/'docs/assets/site.css').read_text(encoding='utf-8')
+        self.assertIn("el('a','catalog-card')",js)
+        self.assertIn("el('button','taxonomy-card')",js)
+        self.assertIn("scrollIntoView",js)
+        self.assertIn('class="scroll-progress"',html)
+        self.assertIn('prefers-reduced-motion:reduce',css)
+        self.assertIn('IntersectionObserver',js)
