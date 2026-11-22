@@ -157,6 +157,39 @@ def render_mobile(data: dict) -> str:
     return '\n'.join(sections)
 
 
+
+def render_chapters(data: dict) -> str:
+    """Render expanded analytical commentary from the reviewed data model."""
+    chapters = data.get('chapters', [])
+    if not chapters:
+        return ''
+    lookup = {source['id']: source for source in data.get('sources', [])}
+    out = ['<section class="research-reading" id="deep-reading" aria-labelledby="reading-title">',
+           '<h2 id="reading-title">逐次展开：八次危机的背景、机制与政策回应</h2>',
+           '<p class="reading-intro">本部分为原创研究梳理，区分著作解释框架、可核实的历史事实与仍存在争议的归因；节点日期是各阶段代表史实，并不表示危机均在当月爆发。</p>',
+           '<nav class="reading-nav" aria-label="跳转至各次危机">']
+    for i, chapter in enumerate(chapters, 1):
+        out.append(f'<a href="#chapter-{i}">危机{i:02d}</a>')
+    out.append('</nav>')
+    labels = [('anchor', '日期定位'), ('background', '历史背景'),
+              ('mechanism', '解释机制'), ('response', '政策与传导'),
+              ('assessment', '评议与证据边界')]
+    for i, chapter in enumerate(chapters, 1):
+        out.append(f'<section class="research-chapter" id="chapter-{i}">')
+        out.append(f'<p class="chapter-index">CHAPTER {i:02d} / {e(chapter["period"])}</p>')
+        out.append(f'<h3>{e(chapter["title"])}</h3>')
+        for key, label in labels:
+            out.append(f'<p><strong>{label} · </strong>{e(chapter[key])}</p>')
+        out.append('<div class="chapter-sources"><strong>本章资料：</strong>')
+        for source_id in chapter.get('source_ids', []):
+            source = lookup.get(source_id)
+            if source:
+                out.append(f'<a target="_blank" rel="noopener noreferrer" href="{e(source["url"])}">{e(source["publisher"])} · {e(source["title"])}</a>')
+        out.append('</div></section>')
+    out.append('</section>')
+    return '\n'.join(out)
+
+
 def render_notes(data: dict, *, reference: bool, site_url: str | None=None) -> str:
     m=data['metadata']
     if reference:
@@ -170,7 +203,7 @@ def render_notes(data: dict, *, reference: bool, site_url: str | None=None) -> s
     nav=(f'<a href="{e(site_url)}">返回时间轴资料库首页</a>' if site_url else '')
     return f'''<aside class="article-notes" aria-label="资料与使用说明">
 <h2>资料与核验说明</h2>{status}{sources}<p>展示方式：等距时间轴，节点距离不代表真实时间间隔；移动设备改用顺序事件列表。</p>
-<div class="article-tools">{nav}<a href="#timeline-shell">返回图片</a></div>
+<div class="article-tools">{nav}<a href="#timeline-shell">返回时间轴</a><a href="#deep-reading">阅读八次危机详解</a></div>{render_chapters(data)}
 </aside>'''
 
 
