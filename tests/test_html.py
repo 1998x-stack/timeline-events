@@ -9,6 +9,7 @@ from html.parser import HTMLParser
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts'))
 import render_html as renderer
+import render_research as research_renderer
 
 class HtmlTests(unittest.TestCase):
     def setUp(self):
@@ -123,4 +124,30 @@ class MotionTests(unittest.TestCase):
     def test_deployed_page_matches_generator(self):
         expected=renderer.render_html(self.data,reference=True,site_url='../../index.html')
         actual=(ROOT/'docs/events/us-china-trade-war/index.html').read_text(encoding='utf-8')
+        self.assertEqual(actual,expected)
+
+class ResearchDossierTests(unittest.TestCase):
+    def setUp(self):
+        self.data=json.loads((ROOT/'skills/timeline-events/examples/emmanuel-macron-rise.json').read_text(encoding='utf-8'))
+
+    def test_research_content_is_visible_source_backed_and_interactive(self):
+        page=research_renderer.render_research_html(self.data,site_url='../../index.html')
+        self.assertEqual(page.count('class="event event--'),10)
+        self.assertEqual(page.count('class="dossier-chapter"'),5)
+        self.assertEqual(page.count('class="connection-card"'),5)
+        self.assertEqual(page.count('class="claim-card"'),8)
+        self.assertIn('François Henrot',page)
+        self.assertIn('1995—1997',page)
+        self.assertIn('data-audit-filter="confirmed"',page)
+        self.assertIn('prefers-reduced-motion:reduce',page)
+        self.assertIn('https://www.legifrance.gouv.fr/',page)
+
+    def test_research_rejects_unmapped_reference(self):
+        self.data['research']['chapters'][0]['source_ids']=['not-a-real-source']
+        with self.assertRaises(ValueError):
+            research_renderer.render_research_html(self.data)
+
+    def test_published_research_page_matches_generator(self):
+        expected=research_renderer.render_research_html(self.data,site_url='../../index.html')
+        actual=(ROOT/'docs/events/emmanuel-macron-rise/index.html').read_text(encoding='utf-8')
         self.assertEqual(actual,expected)

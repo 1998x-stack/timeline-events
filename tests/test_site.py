@@ -16,7 +16,8 @@ class SiteTests(unittest.TestCase):
         by_slug = {entry['slug']: entry for entry in data['events']}
         self.assertEqual(by_slug['us-china-trade-war']['status'], 'reference_transcription')
         self.assertEqual(by_slug['eight-crises']['status'], 'verified')
-        self.assertEqual(len(data['taxonomies']),6)
+        self.assertEqual(by_slug['emmanuel-macron-rise']['status'], 'verified')
+        self.assertEqual(len(data['taxonomies']),7)
 
     def test_site_form_does_not_claim_to_call_ai(self):
         script=(ROOT/'docs/assets/site.js').read_text(encoding='utf-8')

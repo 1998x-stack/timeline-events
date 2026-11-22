@@ -1,0 +1,579 @@
+{
+  "metadata": {
+    "title": "马克龙崛起时间轴：从财政精英到法国总统",
+    "subtitle": "ENA—阿塔利委员会—罗斯柴尔德—总统府—自建政党：梳理有证据的职业跃迁与争议主张。",
+    "updated_at": "2026-11-22",
+    "display_date": "2026.11",
+    "producer": "Timeline Events · 独立研究",
+    "verification_state": "verified"
+  },
+  "sources": [
+    {
+      "id": "elysee",
+      "publisher": "法国总统府",
+      "title": "Emmanuel Macron — Official Biography",
+      "url": "https://www.elysee.fr/en/emmanuel-macron"
+    },
+    {
+      "id": "decree",
+      "publisher": "法国法律数据库 Légifrance",
+      "title": "2007年8月27日关于法国经济增长委员会的法令第2条",
+      "url": "https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000006267725/2008-11-14"
+    },
+    {
+      "id": "archives",
+      "publisher": "法国国家档案馆",
+      "title": "阿塔利委员会档案记录（2007—2008）",
+      "url": "https://rdf.archives-nationales.culture.gouv.fr/garance/entities/agent/051790/"
+    },
+    {
+      "id": "ft",
+      "publisher": "Financial Times",
+      "title": "Emmanuel Macron’s Rothschild years make him an easy election target (2017-03-28)",
+      "url": "https://www.ft.com/content/9bd62502-12cf-11e7-b0c1-37e417ee6c76"
+    },
+    {
+      "id": "monde",
+      "publisher": "Le Monde",
+      "title": "Les années Rothschild d’Emmanuel Macron (2017-05-10)",
+      "url": "https://www.lemonde.fr/election-presidentielle-2017/article/2017/05/10/les-annees-rothschild-d-emmanuel-macron_5125204_4854003.html"
+    },
+    {
+      "id": "rothschild",
+      "publisher": "Rothschild & Co（巴黎奥尔良）",
+      "title": "Rapport annuel 2014/2015 — François Henrot 个人履历，第73页",
+      "url": "https://www.rothschildandco.com/siteassets/publications/rothschild_and_co/2014-2015/annual_financial_reports/fr_po_1415_annual-report.pdf"
+    },
+    {
+      "id": "atos",
+      "publisher": "Atos",
+      "title": "Atos Origin and Siemens to create a European IT Champion (2010-12)",
+      "url": "https://www.atosgroup.com/en/press/pr-2010_12_14_02"
+    },
+    {
+      "id": "nestle",
+      "publisher": "雀巢集团",
+      "title": "Pfizer Nutrition 收购公告与交易日程",
+      "url": "https://www.nestle.com/investors/overview/mergers-and-acquisitions/wyeth-nutrition-acquisition"
+    },
+    {
+      "id": "pfizer",
+      "publisher": "辉瑞集团",
+      "title": "Pfizer Completes Sale of Nutrition Business to Nestlé (2012-11-30)",
+      "url": "https://www.pfizer.com/news/press-release/press-release-detail/pfizer-completes-sale-nutrition-business-nestle"
+    },
+    {
+      "id": "montaigne",
+      "publisher": "Institut Montaigne",
+      "title": "Emmanuel Macron — parcours",
+      "url": "https://www.institutmontaigne.org/presidentielle-2022/candidats/emmanuel-macron/"
+    },
+    {
+      "id": "france24",
+      "publisher": "France 24",
+      "title": "Emmanuel Macron’s rapid rise to power",
+      "url": "https://graphics.france24.com/france-presidency-emmanuel-macron-timeline/"
+    },
+    {
+      "id": "election",
+      "publisher": "法国内政部",
+      "title": "2017年总统选举第二轮正式结果",
+      "url": "https://www.archives-resultats-elections.interieur.gouv.fr/resultats/presidentielle-2017/FE.php"
+    },
+    {
+      "id": "brigitte",
+      "publisher": "法国总统府",
+      "title": "Brigitte Macron — Official Biography",
+      "url": "https://www.elysee.fr/en/brigitte-macron"
+    },
+    {
+      "id": "school",
+      "publisher": "法国教育与职业指导机构 ONISEP",
+      "title": "Lycée Henri-IV — établissement public",
+      "url": "https://www.onisep.fr/ressources/structures-enseignement/ile-de-france/paris/lycee-henri-iv"
+    },
+    {
+      "id": "carnegie",
+      "publisher": "Carnegie Endowment",
+      "title": "En Marche: From a Movement to a Government (2018)",
+      "url": "https://carnegieendowment.org/research/2018/04/en-marche-from-a-movement-to-a-government"
+    },
+    {
+      "id": "mediapart",
+      "publisher": "Mediapart",
+      "title": "The secret story behind Macron’s campaign fundraising (2017)",
+      "url": "https://www.mediapart.fr/en/journal/france/300517/secret-story-behind-macrons-campaign-fundraising"
+    },
+    {
+      "id": "newyorker",
+      "publisher": "The New Yorker",
+      "title": "Can Emmanuel Macron Stem the Populist Tide? (2019)",
+      "url": "https://www.newyorker.com/magazine/2019/07/01/can-emmanuel-macron-stem-the-populist-tide"
+    },
+    {
+      "id": "lemonde_diplo",
+      "publisher": "Le Monde diplomatique",
+      "title": "New man Macron’s old-style expertise (2017)",
+      "url": "https://mondediplo.com/2017/03/04macron"
+    },
+    {
+      "id": "crs",
+      "publisher": "美国国会研究处（CRS）",
+      "title": "France’s 2017 Presidential Election: In Brief (2017)",
+      "url": "https://www.everycrsreport.com/reports/R44815.html"
+    },
+    {
+      "id": "oniseptf",
+      "publisher": "TF1 Info",
+      "title": "Macron à quinze ans à La Providence（2017）",
+      "url": "https://www.tf1info.fr/culture/video-la-strategie-du-meteore-quand-emmanuel-macron-faisait-l-epouvantail-devant-sa-prof-et-future-femme-brigitte-trogneux-2013588.html"
+    }
+  ],
+  "events": [
+    {
+      "date": "2007-08-27",
+      "title": "阿塔利委员会",
+      "description": "总统令任命马克龙为经济增长委员会副报告人。",
+      "source_ids": [
+        "decree",
+        "archives"
+      ],
+      "lines": [
+        "总统令任命马克龙",
+        "担任阿塔利委员会",
+        "副报告人"
+      ]
+    },
+    {
+      "date": "2008-01-24",
+      "title": "改革报告发布",
+      "description": "阿塔利委员会提交改革报告，马克龙参与起草。",
+      "source_ids": [
+        "archives",
+        "decree"
+      ],
+      "lines": [
+        "增长改革报告发布",
+        "跨政商网络形成",
+        "投行职业机会出现"
+      ]
+    },
+    {
+      "date": "2010-12-15",
+      "title": "Atos 西门子案",
+      "description": "Atos宣布收购西门子IT服务业务；媒体报道马克龙参与顾问工作。",
+      "source_ids": [
+        "atos",
+        "monde"
+      ],
+      "lines": [
+        "Atos与西门子宣布",
+        "IT服务交易",
+        "马克龙参与顾问"
+      ]
+    },
+    {
+      "date": "2012-04-23",
+      "title": "雀巢并购案",
+      "description": "雀巢宣布以118.5亿美元收购辉瑞营养业务。",
+      "source_ids": [
+        "nestle",
+        "monde",
+        "ft"
+      ],
+      "lines": [
+        "雀巢宣布收购",
+        "辉瑞营养业务",
+        "118.5亿美元"
+      ]
+    },
+    {
+      "date": "2012-05",
+      "title": "入职总统府",
+      "description": "马克龙出任奥朗德总统府副秘书长，负责经济等议题。",
+      "source_ids": [
+        "elysee",
+        "montaigne"
+      ],
+      "lines": [
+        "进入奥朗德总统府",
+        "担任副秘书长",
+        "负责经济议题"
+      ]
+    },
+    {
+      "date": "2014-08-26",
+      "title": "经济部长",
+      "description": "马克龙获任法国经济、工业与数字事务部长。",
+      "source_ids": [
+        "elysee",
+        "montaigne"
+      ],
+      "lines": [
+        "获任经济部长",
+        "从总统幕僚转向",
+        "政府核心岗位"
+      ]
+    },
+    {
+      "date": "2016-04-06",
+      "title": "创建前进运动",
+      "description": "马克龙正式创立“前进！”政治运动，主张跨越左右阵营。",
+      "source_ids": [
+        "elysee",
+        "france24"
+      ],
+      "lines": [
+        "创立“前进！”运动",
+        "建立独立政治品牌",
+        "跨越左右阵营"
+      ]
+    },
+    {
+      "date": "2016-08-30",
+      "title": "辞去部长",
+      "description": "马克龙辞去经济部长职务，转向独立总统竞选。",
+      "source_ids": [
+        "france24",
+        "crs"
+      ],
+      "lines": [
+        "辞去政府部长职位",
+        "转向独立竞选",
+        "筹建全国组织"
+      ]
+    },
+    {
+      "date": "2016-11-16",
+      "title": "宣布参选",
+      "description": "马克龙宣布参加2017年法国总统选举。",
+      "source_ids": [
+        "france24"
+      ],
+      "lines": [
+        "正式宣布参选",
+        "从未担任民选公职",
+        "但拥有部长履历"
+      ]
+    },
+    {
+      "date": "2017-05-07",
+      "title": "当选总统",
+      "description": "马克龙在第二轮总统选举中赢得66.10%的有效选票。",
+      "source_ids": [
+        "election",
+        "elysee"
+      ],
+      "lines": [
+        "第二轮获66.10%",
+        "当选法国总统",
+        "完成政治跃迁"
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "name": "阶段一",
+      "period": "2004—2008",
+      "summary": "ENA、财政监察与改革委员会"
+    },
+    {
+      "name": "阶段二",
+      "period": "2008—2012",
+      "summary": "投行历练、合伙人与并购项目"
+    },
+    {
+      "name": "阶段三",
+      "period": "2012—2016",
+      "summary": "总统府幕僚与经济部长"
+    },
+    {
+      "name": "阶段四",
+      "period": "2016—2017",
+      "summary": "创立运动并赢得总统选举"
+    }
+  ],
+  "insights": [
+    {
+      "title": "并非政治素人",
+      "description": "当选前已具备财政监察、总统府与部长履历。"
+    },
+    {
+      "title": "交易金额需辨明",
+      "description": "118.5亿美元是企业并购价，并非个人收入。"
+    },
+    {
+      "title": "关联不等于因果",
+      "description": "政商网络可核实，私人幕后操纵需要独立证据。"
+    }
+  ],
+  "footer": {
+    "source_label": "核心来源：总统府｜Légifrance｜Rothschild年报｜雀巢｜法国选举档案",
+    "note": "节点等距展示 · 不代表实际时距 · 核验截至2026-11-22"
+  },
+  "research": {
+    "eyebrow": "DOSSIER 001 / POLITICAL ASCENT",
+    "headline": "一次快速攀升背后，是三种资本的叠加。",
+    "summary": "制度资本（ENA 与财政监察）、关系资本（阿塔利委员会与投行客户）、政治资本（总统府岗位与独立竞选组织）。本专题将逐项检验这些机制，也明确指出原文中不能证实的关联。",
+    "metrics": [
+      {
+        "value": "2004—2017",
+        "label": "职业上升观察期",
+        "note": "ENA 毕业至赢得总统大选"
+      },
+      {
+        "value": "2010",
+        "label": "投行合伙人",
+        "note": "加入 Rothschild 后约两年"
+      },
+      {
+        "value": "$11.85B",
+        "label": "雀巢并购对价",
+        "note": "企业交易金额，不是个人收入"
+      },
+      {
+        "value": "66.10%",
+        "label": "第二轮有效票占比",
+        "note": "2017年5月7日官方选举结果"
+      }
+    ],
+    "chapters": [
+      {
+        "index": "01",
+        "eyebrow": "THE CIVIL SERVICE",
+        "title": "真正的起点：不是“无名小哥”，而是法国行政精英训练体系",
+        "body": [
+          "马克龙2004年毕业于法国国家行政学院 ENA，随后进入财政监察系统。这不是普通应届毕业生路径，而是法国高级公务员传统的精英职业通道。2007年8月27日，总统令正式把他列为由雅克·阿塔利主持的经济增长委员会副报告人。",
+          "委员会把公共部门、商业领袖和政策专家放在同一工作平台。官方任命名单同时包含雀巢的 Peter Brabeck-Letmathe、Serge Weinberg 等企业界人物。与会经历提供了可观察的职业接触机会；不过“认识”本身还不是存在秘密交易的证据。"
+        ],
+        "takeaway": "关键跃迁：政策研究岗位 → 接触跨党派政商人物",
+        "source_ids": [
+          "elysee",
+          "decree",
+          "archives"
+        ]
+      },
+      {
+        "index": "02",
+        "eyebrow": "THE BANKING YEARS",
+        "title": "2008—2010：谁把他带进罗斯柴尔德，他又如何成为合伙人？",
+        "body": [
+          "《世界报》2017年长篇调查称，Serge Weinberg 向罗斯柴尔德高级合伙人 François Henrot 推荐马克龙；Alain Minc 等人也在他的早期职业网络中发挥作用。Henrot 面试后录用马克龙。2008年他加入投行业，2010年晋升为 associé-gérant（管理合伙人）。",
+          "这是一条可报道、可分析的推荐链，但它不等于家族联姻或财产交换的证据。他的优势主要被报道为政府部门知识、跨领域关系与客户沟通，而非一入行就掌握复杂并购建模。"
+        ],
+        "takeaway": "关键跃迁：公共财政经验 → 私人银行客户网络",
+        "source_ids": [
+          "monde",
+          "ft",
+          "montaigne",
+          "lemonde_diplo"
+        ]
+      },
+      {
+        "index": "03",
+        "eyebrow": "THE TRANSACTIONS",
+        "title": "两笔大交易：角色不同，不能把所有成交额算作个人功劳",
+        "body": [
+          "2010年12月，Atos 与西门子宣布IT服务业务交易。Atos 的公司公告证实交易规模和产业背景；《世界报》和《金融时报》报道马克龙作为罗斯柴尔德团队成员参与顾问工作。报道同时指出，他当时并非无所不能的唯一负责人。",
+          "2012年4月23日，雀巢公告以118.5亿美元收购辉瑞营养业务；11月30日完成交易。媒体报道马克龙在顾问与客户关系层面发挥了重要作用，且此前在阿塔利委员会与雀巢高层 Brabeck 有接触。交易总价是企业并购对价，不是投行收费，更不是马克龙个人收入。"
+        ],
+        "takeaway": "关键跃迁：并购顾问项目经验 → 企业高层关系与声誉",
+        "source_ids": [
+          "atos",
+          "monde",
+          "ft",
+          "nestle",
+          "pfizer",
+          "decree"
+        ]
+      },
+      {
+        "index": "04",
+        "eyebrow": "FROM BANKER TO MINISTER",
+        "title": "2012—2016：所谓“从政零经验”忽视了总统府与部长履历",
+        "body": [
+          "2012年，马克龙由银行业转入奥朗德总统府，担任副秘书长；2014年8月被任命为经济、工业与数字事务部长。他在政府核心职位上参与经济政策制定，2016年离职前已经具备数年高层公共决策工作经历。",
+          "因此可以准确说他在2017年前没有赢得过民选公职，也没有经营过传统全国性政党；却不能说他完全没有从政经验。他的“体制内资历 + 体制外竞选组织”双重身份，才是选举叙事的一部分。"
+        ],
+        "takeaway": "关键跃迁：总统幕僚 → 内阁部长 → 独立候选人",
+        "source_ids": [
+          "elysee",
+          "montaigne",
+          "france24",
+          "crs"
+        ]
+      },
+      {
+        "index": "05",
+        "eyebrow": "THE ELECTION WINDOW",
+        "title": "2016—2017：一年成为总统，是政治组织、筹资和机会窗口的叠加",
+        "body": [
+          "2016年4月6日“前进！”运动成立；8月底离开政府；11月正式宣布参选。2017年5月7日，他在第二轮选举中获得66.10%的有效选票。这意味着从创立个人政治运动到胜选约13个月，但不是从完全无职业政治背景到总统只用了1年。",
+          "卡内基国际和平基金会分析了新运动的开放式组织与志愿者动员；Mediapart 调查指出来自银行及企业关系网络的筹资帮助；美国国会研究处与 France 24 同时讨论传统两大政党弱化、奥朗德不再竞选以及菲永的竞选危机。多个条件共同作用，无法被简化为某一个人“钦点”。"
+        ],
+        "takeaway": "关键跃迁：个人品牌 + 政治空档 + 资金组织能力 → 总统选举胜利",
+        "source_ids": [
+          "elysee",
+          "election",
+          "carnegie",
+          "mediapart",
+          "france24",
+          "crs"
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "name": "雅克·阿塔利 Jacques Attali",
+        "role": "公共政策平台",
+        "mechanism": "主持2007年经济增长委员会；马克龙是法定任命的副报告人。",
+        "limits": "可证实正式工作关系；不能据此断言存在秘密政治操纵。",
+        "source_ids": [
+          "decree",
+          "archives"
+        ]
+      },
+      {
+        "name": "Serge Weinberg → François Henrot",
+        "role": "职业举荐链",
+        "mechanism": "《世界报》调查报道 Weinberg 向 Henrot 推荐马克龙，Henrot 参与录用。",
+        "limits": "属于有明确出处的新闻调查，而非录用内部档案。",
+        "source_ids": [
+          "monde",
+          "ft"
+        ]
+      },
+      {
+        "name": "Peter Brabeck-Letmathe",
+        "role": "从改革委员会到客户关系",
+        "mechanism": "2007年法令列其为委员会成员；媒体报道他与马克龙后来就雀巢并购进行接触。",
+        "limits": "属于可解释的接触渠道；不能推出并购安排违法或事先被操纵。",
+        "source_ids": [
+          "decree",
+          "monde",
+          "newyorker"
+        ]
+      },
+      {
+        "name": "弗朗索瓦·奥朗德 François Hollande",
+        "role": "政府任用与政治历练",
+        "mechanism": "2012年马克龙进入总统府，2014年升任经济部长。",
+        "limits": "正式任命与任职可核实，不等于他在后来选举中由奥朗德“操控”。",
+        "source_ids": [
+          "elysee",
+          "montaigne"
+        ]
+      },
+      {
+        "name": "“前进！”运动 En Marche!",
+        "role": "独立竞选基础设施",
+        "mechanism": "2016年启动组织，结合志愿者、捐款者和传统政治人物的支持。",
+        "limits": "竞选筹资可能受人脉影响，但“资金支持”与“买下选举”不是同一个判断。",
+        "source_ids": [
+          "elysee",
+          "carnegie",
+          "mediapart"
+        ]
+      }
+    ],
+    "claim_audit": [
+      {
+        "claim": "“毫无从政经验，一年从无名到总统”",
+        "verdict": "需要限定",
+        "finding": "从“前进！”创立到当选约13个月属实；但他2007年已参与政府委员会、2012年任总统府副秘书长、2014年任部长。此前没有民选职务，不代表没有政府经验。",
+        "source_ids": [
+          "elysee",
+          "decree",
+          "france24"
+        ]
+      },
+      {
+        "claim": "“金融小白进入罗斯柴尔德，2010年成为合伙人”",
+        "verdict": "部分属实",
+        "finding": "2008年入行、2010年成为合伙人可核实；但入行前已有高级公务员背景。“完全不懂金融”是渲染性修辞，不能按字面当作专业能力结论。",
+        "source_ids": [
+          "montaigne",
+          "monde",
+          "ft"
+        ]
+      },
+      {
+        "claim": "“François Henrot 在1985—1987年主管 Crédit du Nord”",
+        "verdict": "年份不符",
+        "finding": "Rothschild & Co 2014/15年度报告第73页写其在1995—1997年任 Crédit du Nord 主席和 Paribas 管理委员会成员。原文时间差十年。",
+        "source_ids": [
+          "rothschild"
+        ]
+      },
+      {
+        "claim": "“雀巢以120亿美元收购辉瑞婴儿营养业务”",
+        "verdict": "约数成立",
+        "finding": "企业一手公告数字为118.5亿美元，2012年4月宣布、11月底完成；“120亿美元”是四舍五入。投行顾问成绩不能与标的估值或个人收益画等号。",
+        "source_ids": [
+          "nestle",
+          "pfizer",
+          "monde"
+        ]
+      },
+      {
+        "claim": "“马克龙的老师之家庭银行关系促成罗斯柴尔德录用”",
+        "verdict": "缺乏证据",
+        "finding": "可以证实布丽吉特与马克龙相识于亚眠学校，以及 Henrot 与 Crédit du Nord 的履历；但现有可查材料未建立布丽吉特家族、其前夫的任职与马克龙录用之间的因果链。私人关系不能因时间或地域重合就被推断为权钱交易。",
+        "source_ids": [
+          "brigitte",
+          "rothschild",
+          "monde"
+        ]
+      },
+      {
+        "claim": "“被转去巴黎亨利四世私立中学”",
+        "verdict": "校制有误",
+        "finding": "巴黎 Lycée Henri-IV 是公立中学；相关媒体记录马克龙早年在亚眠就读、后前往巴黎。原文称“私立”不准确。",
+        "source_ids": [
+          "school",
+          "oniseptf"
+        ]
+      },
+      {
+        "claim": "“投行同事被开除给他让位、有人幕后安排并购”",
+        "verdict": "未独立证实",
+        "finding": "主流调查确实记录了同行竞争与客户关系；但“为了给他让位而特意解雇同事”的动机及幕后操纵未取得可靠可交叉的证据，不能写为定论。",
+        "source_ids": [
+          "ft",
+          "monde"
+        ]
+      },
+      {
+        "claim": "“英国金融城对巴黎寡头的敌意决定了FT报道立场”",
+        "verdict": "属于推论",
+        "finding": "可以比较媒体报道的角度，但没有具体编辑指令、所有权干预证据或可验证的因果链，不能从批评性报道自动推出跨国金融派系操作。",
+        "source_ids": [
+          "ft",
+          "monde",
+          "crs"
+        ]
+      }
+    ],
+    "hypotheses": [
+      {
+        "title": "结构性通道",
+        "body": "ENA—财政监察系统—改革委员会—投资银行—总统府—政府部长是一条跨公共与私人部门的职业通道。它解释人脉如何积累，但本身不证明违法行为。"
+      },
+      {
+        "title": "人际资本与专业互补",
+        "body": "马克龙不必在一开始就具备深厚建模技术，也可以通过谈判、客户接触、政策理解和团队执行创造咨询价值。2012年雀巢项目是这种能力组合的关键展示。"
+      },
+      {
+        "title": "选举机会窗口",
+        "body": "2016—2017年的党派重组、资金动员、志愿者组织和传统候选人遭遇挫折共同影响胜负。把结果归结为单个银行或家族的“安排”忽视了选民行为。"
+      }
+    ],
+    "methodology": [
+      "时间线仅选取10个有明确月份、年份或官方日期支撑的关键节点，未证明精确月份的履历归入正文而非虚构日期。",
+      "一级来源：爱丽舍宫、法国政府法律资料库、法国国家档案馆、银行年报、Atos及雀巢/辉瑞公司声明、法国内政部选举档案。",
+      "二级调查：Financial Times、Le Monde、Mediapart、France 24、Carnegie、CRS。对转述性证言标为媒体报道，不当成原始人事记录。",
+      "证据等级表达为“可核实／需要限定／年份不符／缺乏证据／未独立证实”；没有查到证据不等于已经证明某事绝不可能发生。",
+      "本文聚焦马克龙2004—2017年职业与政治崛起，早年私人生活仅在纠正明确的时间和学校属性错误时有限涉及。"
+    ]
+  }
+}

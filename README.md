@@ -120,3 +120,15 @@ node --check skills/timeline-events/templates/timeline.interactions.js
 ## 维护入口
 
 [AGENTS.md](AGENTS.md) 定义角色分工、证据审计、HTML/移动端规范、发布门禁；[Skill references 索引](skills/timeline-events/references/README.md) 给出按需阅读路径。建议在 PR 中同时提交生成后的演示页面截图和自动化测试结果。
+
+## 新增研究专题：马克龙崛起史（2004—2017）
+
+[查看证据核验版交互网页](https://1998x-stack.github.io/timeline-events/events/emmanuel-macron-rise/) · [复现数据](skills/timeline-events/examples/emmanuel-macron-rise.json) · [研究方法与主张核验规范](skills/timeline-events/references/research-dossier.md)
+
+在不更改原有时间轴或《八次危机》页面渲染的前提下，增加可选人物深度研究模式：10个事件节点、5章职业轨迹、5组可证实的职业关系、8条争议主张核验和20份带源网址的公开资料。区分已经证明的职业网络与未经证实的幕后操纵推论；例如罗斯柴尔德报告中的Henrot与Crédit du Nord履历为1995—1997年，并非传言中的1985—1987年。
+
+```bash
+python skills/timeline-events/scripts/render_research.py skills/timeline-events/examples/emmanuel-macron-rise.json --output dist/emmanuel-macron.html
+```
+
+该扩展使用独立的`templates/research.css`与`templates/research.js`，不修改原始通用模板，以保护其他专题和参考图的可再生性。最终网页是含CSS/JS的离线自包含HTML，支持筛选主张、点击时间轴节点、移动端阅读和减少动态效果。

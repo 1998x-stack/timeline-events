@@ -7,6 +7,8 @@ description: 输入历史、政策、外交、财经、科技或社会事件，�
 
 **触发**：用户只说一个事件名称、一个事件主题或给一张时间轴参考图，期待真正生成 HTML / SVG / PNG，而不是仅得到提示词。
 
+**进阶研究输出**：遇到人物崛起、政治权力网络、企业发展与长期争议，可在标准 JSON 加入可选 `research` 字段，生成分章研究报告、关系说明、主张核验与方法披露。见 `references/research-dossier.md`。
+
 **运行环境**：Python 3.10+。本 SKILL 目录必须包含自身的 `scripts/`、`templates/`、`schemas/`、`references/` 与 `examples/`。允许从任何仓库根或任意工作目录运行。
 
 ## 先判断工作模式
@@ -22,8 +24,9 @@ description: 输入历史、政策、外交、财经、科技或社会事件，�
 2. **Research**：原始协议、政府公告、裁判文书、论文和一手数据库优先，辅助新闻交叉核验；不得凭印象编日期或数字。阅读 `references/evidence-policy.md`、`references/source-governance.md`。
 3. **Edit**：选取 4–10 个转折节点，按真实日期升序；记录主体、状态、简短标题、可核实描述及 URL。生成满足 `schemas/timeline.schema.json` 的 JSON。
 4. **Render**：HTML 为第一产物；生成器只渲染结构化数据，不自行编造资料。模板位于 `templates/`，图片使用 `scripts/timeline_events.py`。
-5. **Review**：核对原始来源与每个断言；检测 XSS 转义、文字溢出、手机纵轴、键盘焦点、动效关闭、来源披露与页面无 JS 可读性。
-6. **Deliver**：交付 HTML + JSON + 证据；若请求 SVG/PNG 再生成；仅在被授权且测试通过后发布 Pages。
+5. **Deep Dossier（选用）**：对复杂事件将 `research.chapters`、`research.connections`、`research.claim_audit`、`research.hypotheses`、`research.methodology` 纳入同一 JSON；标注来源与反证，禁止将同一社交圈的接触写成没有证据的秘密因果。
+6. **Review**：核对原始来源与每个断言；检测 XSS 转义、文字溢出、手机纵轴、键盘焦点、动效关闭、来源披露与页面无 JS 可读性。
+7. **Deliver**：交付 HTML + JSON + 证据；若请求 SVG/PNG 再生成；仅在被授权且测试通过后发布 Pages。
 
 ## 如何调用（路径以当前 SKILL.md 所在目录为准）
 
@@ -70,3 +73,11 @@ python "$SKILL_DIR/scripts/render_html.py" "$SKILL_DIR/examples/reference-image-
 ```
 
 仅在运行实际成功后向用户声称生成完成；如不能进行浏览器交互测试，需单独说明。发布 Pages 时再阅读 `references/site-integration.md` 和仓库根 `AGENTS.md`。
+
+## 人物崛起深度研究示例
+
+```bash
+python "$SKILL_DIR/scripts/render_research.py" "$SKILL_DIR/examples/emmanuel-macron-rise.json" --output dist/emmanuel-macron/index.html
+```
+
+结构化 `research` 在标准时间轴下方渲染为深度专题，保持不依赖外网 JS、带原文引用、支持键盘导航与减少动态。`research.claim_audit` 应将可核实、应限定、原文数字不符和缺乏证据分别标注。

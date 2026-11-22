@@ -26,3 +26,17 @@ python scripts/render_html.py examples/us-china-trade-war-verified.json \
 ## 安装说明
 
 完整目录可复制到任何支持 Agent Skills 的客户端。当前仓库同时维护 `.pi/skills/timeline-events` 和 `.agent/skills/timeline-events` 的全量镜像，便于按目录直接复制；镜像内容由根目录 `scripts/sync_skill.py` 生成，不应手工分叉。
+
+## 长篇人物研究
+
+示例 `examples/emmanuel-macron-rise.json` 通过可选 `research` 数据字段复用同一 HTML 生成器，输出按时间轴 + 职业阶段 + 关系证据 + 主张核验 + 方法说明组织的长文专题。详见 `references/research-dossier.md`。
+
+## 可选深度研究模式
+
+人物、政经关系与争议核验可以采用 `research` 扩展字段。与旧时间轴兼容，必须使用独立扩展渲染器，不改动主线渲染。
+
+```bash
+python scripts/render_research.py examples/emmanuel-macron-rise.json --output dist/emmanuel-macron.html
+```
+
+独立扩展文件：`scripts/dossier_renderer.py`、`scripts/render_research.py`、`templates/research.css` 和 `templates/research.js`。示例包含 10 个节点、5 章解读、5 组人脉事实及 8 项原文说法审计。

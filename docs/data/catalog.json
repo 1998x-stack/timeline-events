@@ -73,6 +73,18 @@
         "国家变迁",
         "条约史"
       ]
+    },
+    {
+      "id": "people",
+      "name": "人物与权力",
+      "symbol": "♙",
+      "description": "政治人物、改革者、思想家与影响力网络。",
+      "tags": [
+        "政治人物",
+        "公共领导",
+        "职业路径",
+        "权力网络"
+      ]
     }
   ],
   "events": [
@@ -110,6 +122,24 @@
       "updated_at": "2026-11-22",
       "status": "verified",
       "url": "./events/eight-crises/"
+    },
+    {
+      "slug": "emmanuel-macron-rise",
+      "title": "马克龙如何崛起：从财政精英到法国总统",
+      "description": "10个关键节点、5章职业路径、政商关系证据链及8条原文主张核验，分析2004—2017年的政治攀升。",
+      "range": "2004—2017",
+      "nodes": 10,
+      "category": "people",
+      "tags": [
+        "政治人物",
+        "法国大选",
+        "权力网络",
+        "罗斯柴尔德",
+        "事实核验"
+      ],
+      "updated_at": "2026-11-22",
+      "status": "verified",
+      "url": "./events/emmanuel-macron-rise/"
     }
   ]
 }

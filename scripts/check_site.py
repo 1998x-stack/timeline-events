@@ -10,7 +10,7 @@ from urllib.parse import urlparse, unquote
 
 ROOT=Path(__file__).resolve().parents[1]
 DOCS=ROOT/'docs'
-REQUIRED={'diplomacy','policy','technology','business','society','history'}
+REQUIRED={'diplomacy','policy','technology','business','society','history','people'}
 STATES={'reference_transcription','verified'}
 
 class Structure(HTMLParser):
@@ -37,7 +37,7 @@ def verify() -> None:
     cats=catalog.get('taxonomies',[])
     ids=[x['id'] for x in cats]
     if set(ids)!=REQUIRED or len(ids)!=len(set(ids)):
-        raise ValueError('Six unique category ids required')
+        raise ValueError('Seven unique category ids required')
     tags={x['id'] for x in cats}
     entries=catalog.get('events',[])
     slugs=set()
