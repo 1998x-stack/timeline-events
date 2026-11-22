@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "last_updated": "2026-11-22",
+  "taxonomies": [
+    {"id":"diplomacy","name":"国际关系与贸易","symbol":"↗","description":"外交谈判、贸易关系、国际协定与制裁。","tags":["外交谈判","贸易争端","国际组织","协议与制裁"]},
+    {"id":"policy","name":"政策与法治","symbol":"§","description":"政策演变、立法司法、监管与公共治理。","tags":["立法司法","监管制度","政策执行","公共治理"]},
+    {"id":"technology","name":"科技与产业","symbol":"⌘","description":"技术演进、产业周期、标准与创新竞争。","tags":["人工智能","芯片半导体","能源技术","产业链"]},
+    {"id":"business","name":"商业与金融","symbol":"◈","description":"公司发展、并购融资、市场危机和金融制度。","tags":["企业发展","并购与重组","宏观经济","资本市场"]},
+    {"id":"society","name":"社会与文化","symbol":"◎","description":"社会运动、公共卫生、教育和文化传播。","tags":["社会事件","公共卫生","教育变革","文化传播"]},
+    {"id":"history","name":"历史与战争","symbol":"◷","description":"战争、王朝、历史变迁与关键条约。","tags":["战争战役","历史人物","国家变迁","条约史"]}
+  ],
+  "events": [
+    {
+      "slug":"us-china-trade-war",
+      "title":"中美贸易战：从加征关税到阶段性休战",
+      "description":"按上传参考图片复刻的十节点财经时间轴，展示深蓝主轴、交错节点和四阶段布局。",
+      "range":"2018—2026",
+      "nodes":10,
+      "category":"diplomacy",
+      "tags":["贸易争端","政策演变","关税","版式复刻"],
+      "updated_at":"2026-11-22",
+      "status":"reference_transcription",
+      "url":"./events/us-china-trade-war/"
+    }
+  ]
+}

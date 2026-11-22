@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>%%PAGE_TITLE%%</title>
+<meta name="description" content="%%PAGE_DESCRIPTION%%">
+<style>
+%%CSS%%
+</style>
+</head>
+<body>
+<main>
+  <div class="frame-shell" id="timeline-shell">
+    <div class="frame-viewport" id="timeline-viewport">
+      <article class="artboard" id="artboard" aria-label="事件时间轴信息图">
+        %%ARTBOARD%%
+      </article>
+    </div>
+    %%MOBILE%%
+  </div>
+  %%NOTES%%
+</main>
+<script>
+(function(){
+  const stage=document.getElementById('artboard');
+  const viewport=document.getElementById('timeline-viewport');
+  if(!stage||!viewport)return;
+  function resize(){stage.style.transform='scale('+(viewport.clientWidth/2048)+')';}
+  resize();
+  if('ResizeObserver' in window) new ResizeObserver(resize).observe(viewport);
+  else window.addEventListener('resize',resize);
+})();
+</script>
+</body>
+</html>

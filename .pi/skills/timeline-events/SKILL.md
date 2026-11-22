@@ -1,109 +1,146 @@
 ---
 name: timeline-events
-description: 当用户输入历史事件、政策进程、战争、外交谈判、科技发展、公司里程碑等主题，检索并交叉核验节点，制作中文横向时间轴信息图，输出可编辑 SVG、高清 PNG 和逐节点来源清单。适用于“做一张与参考图同风格的事件时间线”。
+description: 将一个历史、政策、外交、财经、科技或社会事件转化为可审计的中文时间轴网页。自动规划研究、检索及交叉核验关键节点、建立 JSON 证据链、生成可编辑且响应式的独立 HTML；可同时生成 SVG/PNG，并在具备仓库授权时发布到 GitHub Pages。触发示例：把中美贸易战做成时间轴HTML、某事件发展历程网页、参考图片的时间轴复刻、建立事件图谱并发布。
 ---
 
-# Timeline Events｜事件时间轴信息图 SKILL
+# Timeline Events｜从一个事件到可审计的时间轴 HTML
 
-## 使用入口与触发
+> **目标**：用户只提供一个事件名称，即研究、建模、校验、生成 HTML 网页；不是仅返回设计建议或一段绘图提示词。
+>
+> **底线**：事实模型与视觉模型分离。没有证据的数据不能用排版掩盖。`--reference-transcription` 用于忠实复刻用户图片的原始文字，并明确标记未经核验，绝不可冒称完成研究。
 
-用户只需提供事件名称，例如：**中美贸易战**、**中韩自贸协定第二阶段谈判**、**AI 大模型发展史**。也接受指定起止日期、节点数量、语言与截止日期。未提供时自行确定合理范围，不必仅为缺少可选参数而追问。
+## 1. 任务路由
 
-本 Skill 不是仅给出提示词的绘图助手：它先研究形成可追溯的结构化数据，再调用仓库中的确定性渲染器，得到真正可交付的 PNG、SVG 和来源说明。
+先判断用户输入属于哪一类：
 
-工作目录应为仓库根目录。当前 SKILL.md 同步位于两个路径：
-- .pi/skills/timeline-events/SKILL.md
-- .agent/skills/timeline-events/SKILL.md
+| 模式 | 用户说法 | 事实处理 | 输出 |
+|---|---|---|---|
+| `research`（默认） | “中美贸易战，做一个时间轴 HTML” | 检索原始资料、交叉验证、逐节点 URL 映射 | HTML + sources.md；如需再导出 SVG/PNG |
+| `transcription` | “把我这张时间轴图转成一模一样的 HTML” | 忠实转录图片内容，不擅自更正或补写；声明**未独立核验** | 版式还原 HTML、原图对照和核验提示 |
+| `update` | “给已发布网页追加最新进展” | 读旧 JSON、查最新事件，只增修有证据事实、保留变更记录 | 新 HTML、证据差异、验证报告 |
+| `publish` | “发布到 GitHub Pages” | 完成质量门禁后更新 `docs/` 目录与 `catalog.json` | Pages 站点、提交和 CI 状态 |
 
-两个入口引用共同的 scripts/timeline_events.py，禁止各自复制渲染器造成漂移。
+**默认语言**：简体中文。**输入最简**：事件名称。可选输入：起止日期、区域、读者、节点数量 4–10、设计参考、主色调、输出格式、是否公开发布。
 
-## 完整流程（必须按顺序）
+## 2. 主题研究计划
 
-### 1. 确定范围
+1. 定义事件边界、关键参与方、时间范围、实际截止日期。相对日期在执行当日落实为绝对日期。
+2. 从可能转折建立搜索关键词：启动、宣布、实施、生效、升级、协议、暂停、恢复、终止、裁定、实施效果。
+3. 首选原始官方公告、协议正文、法律裁判、交易所文件、企业公告、论文和可复现统计表；使用媒体补充背景与时间。
+4. 为每个候选节点记录 `date / actor / action / status / source_ids / uncertainty`；遇到争议数字、税率或影响分析时检索第二个**独立**来源。
+5. 建立反证检查：官方表述是否单方主张、报道日是否误作生效日、总关税是否误作某一附加税率、签署是否被写成执行、预测是否被写成已发生。
+6. 只选 4–10 个最具解释力的事件。超过 10 个则提出分卷或分段，不因密集而将文字缩为不可读大小。
+7. 不允许把检索引擎结果摘要当作已经读过的材料；尽可能直接打开原始资料，确认标题、时间、关键词和口径。
 
-提取主题、地理范围、时间范围、截至日期及目标读者。若主题仍在发展，明确“截至 YYYY-MM-DD”；绝不可把未来预测写成已发生事件。一次图片选 **4–10 个**关键事件；超过 10 个要分篇，不能缩小到不可读。
+**证据不可得时**：只生成待核验数据草稿，或在有用户上传参考图片时使用 `transcription`；明确不能把后者当作“事实调查完成”。
 
-### 2. 研究与交叉核验
+## 3. 数据模型与文件命名
 
-使用当前 Agent 可用的搜索或可信资料检索工具开展研究。检索优先级：
+研究模式使用仓库 `schemas/timeline.schema.json`：
 
-1. 原始政府公告、组织正式文件、企业公告、协议正文和法规条文。
-2. 学术论文、研究机构原始报告、权威数据库。
-3. 主流媒体报道，尤其用于补齐事件发生时间与背景。
+```json
+{
+  "metadata": {"title":"事件标题", "subtitle":"摘要", "updated_at":"2026-11-22", "producer":"署名"},
+  "sources": [{"id":"s1", "publisher":"原始机构", "title":"原文标题", "url":"https://..."}],
+  "events": [
+    {"date":"2020-01-15", "title":"短标题", "description":"可核验的一句话", "source_ids":["s1"]}
+  ],
+  "phases": [{"name":"阶段一", "period":"2018—2019", "summary":"阶段归纳"}],
+  "insights": [{"title":"关键口径", "description":"对读图误区作解释"}]
+}
+```
 
-对每个候选事件记录：具体日期、行为主体、可核实的行为、涉及数量的**精确定义及口径**、来源 URL、置信程度和是否存在异议。日期以事件实际发生日为准，别把新闻报道日期误当事件日期。
+约束：
+- 4–10 个节点，时间升序，`YYYY-MM` 或 `YYYY-MM-DD`；未知精确日不要猜。
+- 每个真实节点至少一个 `source_ids`，必须指向真实 `sources`。日期和语义要由 Agent 比对原文确认；CLI 只做形式校验。
+- `status=planned` 的未来计划必须标为尚未发生；最后一个事件可 `highlight=true`，**红色不意味着已完全成功**。
+- 如果图文不清晰，先编辑精简标题或分图，绝不能截断核心事实。
+- `metadata.updated_at` 是**事实核查截止日**，不是渲染脚本运行日期。
+- `metadata` 和 `events` 的自由文本不可含 HTML；渲染器会进行 HTML 转义，禁止关闭转义。
 
-对高争议、重大因果判断及数字最好采用两个独立信源；若只能找到一个来源，在证据清单中如实说明，不得自动合成或虚构第二来源。必须区分“宣布 / 签署 / 生效 / 暂停 / 到期 / 宣称 / 实际完成”，不使用未经证实的“全部结束”“正式完成”等结论。
+复刻模式专用 `examples/reference-image-transcription.json`：保留图中文字的 `lines` 来精准控制换行，并在 `metadata.verification_state` 中显式声明 `reference_transcription`；`metadata.notice` 必填。参考图本身给出的“机构名单”并非逐条可点击原始证据，未经核验就不能填入研究模式的 `sources` 假装真实引文。
 
-**禁止伪造日期、新闻标题、网址、谈判轮数、百分比和历时。** 证据不足的事件应排除、标明待核验，或征求用户补充来源。研究工具不可用时，可基于用户提供的已核实资料渲染；如无资料，明确无法独立核验，不能谎称已经联网研究。
+## 4. 渲染：HTML 为第一产物
 
-### 3. 编排事件与证据
+在仓库根目录，先运行：
 
-只保留最能代表转折的 4–10 节点，严格按时间升序。每个节点必须有：
-- date：YYYY-MM 或 YYYY-MM-DD；例如 2020-01-15
-- title：精炼、尽量 8 个汉字以内
-- description：一个可核实的短句，不做多事件拼接
-- source_ids：指向 sources 中真实存在的引用 id
-- status：可选 confirmed（默认）或 planned（尚未发生）
-- highlight：仅最后一个节点可为 true
+```bash
+python scripts/render_html.py data/<slug>.json \
+  --output dist/<slug>/index.html
+```
 
-元数据：
-- metadata.title：单张图的主标题
-- metadata.subtitle：副标题，概括经过
-- metadata.updated_at：YYYY-MM-DD，**资料审核截止日期**，不要写成软件运行日冒充更新日
-- metadata.producer：可选，制作者署名
+生成 HTML 的要求：
+- **单文件独立**：内联 CSS、正文全部是真实 DOM 文本；浏览器无 JS 时仍可读正文。JS 只用于响应式缩放，不负责加载故事内容。
+- **原版风格**：2048×1280 白底信息图；顶部深蓝标题/分割线/灰色副标题，浅蓝阶段跨度卡，深蓝主轴；事件上下交错；历史蓝点，末端红点；四阶段卡、三个阅读提示、底部来源和等距提醒。
+- **响应式**：桌面保持参考图位置关系；窄屏改为垂直事件列表，避免缩得无法阅读。
+- **语义与无障碍**：h1/h2、article/section、ol、time、足够的对比度、可选择与复制的文字、移动端可聚焦链接。
+- **事实披露**：生成页必须有可见的证据说明或转录免责声明，不得只在注释里写“未核验”。
 
-来源：
-- sources：id、publisher、title、url；每条节点至少关联一个 id
-- phases：0–4 个阶段，name、period、summary
-- insights：0–3 条结论，title、description
+用户给图片、要求视觉一模一样时：
 
-严格遵循 examples/us-china-trade-war-verified.json 的字段形状；可另见 schemas/timeline.schema.json。示例的资料截点是 2025-05-13，不能用它代替当下的最新贸易战研究。
+```bash
+python scripts/render_html.py examples/reference-image-transcription.json \
+  --reference-transcription \
+  --output dist/reference/index.html
+```
 
-### 4. 生成图片
+**禁止**在正式研究出版流程中使用 `--reference-transcription` 绕过缺少证据的错误。这样生成的页面必须在站点目录用“原图复刻 · 尚未核验”标注。
 
-从仓库根目录执行：
+## 5. 可选：导出其他格式
 
-~~~bash
+研究模式可继续用已有的 SVG/PNG 渲染器：
+
+```bash
 python -m pip install -r requirements.txt
-python scripts/timeline_events.py examples/us-china-trade-war-verified.json \
-  --output dist/us-china-trade-war --format both
-~~~
+python scripts/timeline_events.py data/<slug>.json \
+  --output dist/<slug>/timeline --format both
+```
 
-对于新主题，先生成经核验的 UTF-8 JSON（例如 data/my-event.json），再替换命令中的输入和输出路径。不要把自然语言主题直接交给渲染器：研究建模由 Agent 完成，渲染器只吃确定的 JSON，避免图像幻觉。
+输出：`index.html`、`timeline.svg`、`timeline.png`、`timeline.sources.md`。注意旧 PNG 渲染器和新 HTML 渲染器目前是独立版式实现，不能声称像素完全相同。HTML 的精确视觉基准见 `references/html-design-spec.md`。
 
-输出：
-- dist/xxx.svg：可编辑、文字可选择的矢量图
-- dist/xxx.png：3200 × 2000 高清图片（需要 CairoSVG）
-- dist/xxx.sources.md：每个节点对应的原始资料网址
+## 6. 内容分类及发布
 
-不安装额外依赖时，可用 --format svg 完成输出。中文字体需系统可用的 Noto Sans CJK SC，缺少字体时必须安装，不能用缺字的图片交付。
+六大类见 `references/site-architecture.md`，首页正式数据在 `docs/data/catalog.json`。发布一个新页面的顺序：
 
-### 5. 最终质量门禁
+1. 采用规范化 slug（如 `us-china-trade-war`），将**已核验**数据放入 `data/<slug>.json`，生成 `docs/events/<slug>/index.html`。
+2. 编辑 `docs/data/catalog.json`，添加真实存在的条目。`status` 只能按实际状态填写 `verified` 或 `reference_transcription`；不得把未核验示例标为验证完成。
+3. 使用正确的相对路径 `./events/<slug>/`，适配项目子路径 `/timeline-events/`。分类标签需来自既定 taxonomy id。
+4. 发布前执行测试、网页 DOM 结构检查、链接检查、移动端和桌面视觉检查。
+5. 提交并运行 GitHub Actions，部署后实际请求公开 Pages URL 验证；成功部署日志 **不等于**公开站点可访问。
+6. 若 Pages 未启用或 GitHub 权限不够，明确告知需要在仓库 Settings → Pages 将 Source 设为 GitHub Actions；默认 GITHUB_TOKEN 无法首次开启 Pages。不得谎称站点已上线。
 
-必须完成以下全部检查：
+**仓库路径**：
+- `.pi/skills/timeline-events/SKILL.md`
+- `.agent/skills/timeline-events/SKILL.md`
 
-- **真实性**：每条节点的日期、结论、数字能映射到 sources.md 的材料；不存在猜测事实
-- **时间性**：事件顺序正确；截止日期和计划状态一致；期间自动计算，不能手写假历时
-- **语义性**：重点说明“宣布与落地”“税率与百分点”等口径；争议不作确定断言
-- **视觉性**：白底、深蓝横线、交错节点、蓝色历史节点和红色末节点，贴近用户参考图
-- **排版性**：无中文方框、缺字、文字溢出、碰撞或超出画布；渲染器对过长文本应报错而不是静默裁切
-- **交付性**：SVG 能解析、PNG 能打开、来源文档存在，示例命令可复现
-- **溯源性**：不要将作者署名、媒体水印或第三方版权标识冒称为自己的制作信息
+两份 SKILL 正文必须逐字节相同，使用 `python scripts/verify_skill_sync.py` 校验。全部执行细则在根目录 `AGENTS.md`。
 
-运行测试：
+## 7. 质量门禁 / Definition of Done
 
-~~~bash
+```bash
 python -m unittest discover -s tests -v
 python scripts/verify_skill_sync.py
-~~~
+python scripts/render_html.py examples/reference-image-transcription.json --reference-transcription --output dist/reference/index.html
+```
 
-最后面向用户给出成品文件、说明数据截止日、列出来源证据，并明确哪些事实不能核验。不把“有来源网址”混同于“来源支持所有表述”。
+检查：
+- [ ] 事件日期顺序/具体状态/数字口径/URL 来源对应且原文可验证
+- [ ] 资料截止时间准确；未来事项非事实化；争议与单方主张有标注
+- [ ] 2048×1280 布局中 10 个节点无重叠，文字不被裁剪，简体中文清晰
+- [ ] 窄屏事件列表按时间排列，全文可阅读；键盘操作可用
+- [ ] HTML 单文件离线可阅读，内容经 HTML 转义，不插入用户脚本
+- [ ] 参考转录模式必须标记“未核验”且不出现在验证完成筛选里
+- [ ] 首页分类数量来自 catalog，不虚增条目，搜索筛选和提示词复制可用
+- [ ] 现有 SVG/PNG 功能及测试未被破坏
+- [ ] CI 全绿、Pages 部署状态与真实公网打开状态分别记录
 
-## 设计原则
+## 8. 使用者交付清单
 
-参考原图：细深蓝标题分隔线、灰色副标题、浅蓝边框数据概览条、中部深蓝水平主轴、上下交替排列日期与描述、蓝色节点、末端红色强调、底部资料说明。
+向用户提供：完整 HTML 链接或文件、研究数据截止日、SVG/PNG（如请求）、来源列表或来源文档、发布到哪个仓库/分支/提交、CI 与 Pages 真实状态、无法核实的限制事项。不要说“后台会自动更新”——除非确实创建有调度器与可运行的数据流水线。
 
-图的横向节点**等距展示而不是按真实时间比例展示**，已在图片底部标示。若节点密集，删减次要事件或拆成两张，不要把日期相互重叠。不要交给概率式图像模型重画整张中文字图，除非仅为不含事实文字的背景插画。
+## 9. 延伸设计参考
 
-进一步细节：references/visual-spec.md 与 references/evidence-policy.md。
+- `references/html-design-spec.md`：与用户参考图的坐标/排版规范、响应式行为
+- `references/site-architecture.md`：首页内容层级、分类与检索策略、目录统计口径
+- `references/source-governance.md`：事实与来源质量、可核验性、发布审批
+- `AGENTS.md`：工作分工、编码规则、内容生命周期、CI / Pages 运维

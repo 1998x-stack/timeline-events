@@ -1,87 +1,110 @@
-# Timeline Events｜事件时间轴信息图生成 Skill
+# Timeline Events｜把复杂事件放回时间里
 
-只输入一个事件名称，让支持 Web 检索的 Agent **研究事实 → 挑选关键节点 → 生成结构化证据 → 排版高清时间轴 → 导出图片**。设计参考用户提供的中国财经时间轴示例：白底、深蓝主轴、上下交错事件、蓝色历史节点、红色结尾节点。
+**事件名称 → 原始资料核验 → 结构化时间轴 → 高清 HTML/SVG/PNG → GitHub Pages。**
 
-## 一图看懂
+本仓库提供可复用的 Pi/Agent SKILL、Python 确定性渲染器和静态事件资料库网站。新增的 HTML 引擎把用户参考图片复刻为**可选择文本、可编辑 CSS、响应式可阅读**的真实页面，而不是插入一张图片。
 
-**输入**：例如“中美贸易战：从2018年到目前，请生成一张带证据链的时间轴”。
+- **首页**：[Timeline Events GitHub Pages](https://1998x-stack.github.io/timeline-events/)
+- **示例时间轴**：[中美贸易战参考图 HTML 复刻](https://1998x-stack.github.io/timeline-events/events/us-china-trade-war/)
+- **部署前提示**：以上是目标地址，是否已经公开可访问以 GitHub Actions 部署结果和实际网站访问为准。
 
-**输出**：SVG 矢量图 + 3200×2000 PNG 图片 + Markdown 逐节点证据清单。
+## 1. 使用 SKILL（只需主题）
 
-**核心原则**：模型负责研究，确定性 Python 程序负责绘图。避免生成模型在图片内直接“画字”时产生错别字、误写日期、凭空编造轮次等问题。
+在可以读取本仓库文件的 Pi / Agent 环境中输入：
 
-## Agent Skill 入口
+> 使用 timeline-events SKILL，深度调查“中韩自贸协定第二阶段谈判”，截至今天，挑选6–10个关键节点，交叉核对原始来源，生成与参考图风格一致的可编辑 HTML、来源说明，必要时导出 SVG 和 PNG。
 
-两份同步的 Agent Skills：
+对应目录：
 
-- **Pi**：.pi/skills/timeline-events/SKILL.md
-- **Agent**：.agent/skills/timeline-events/SKILL.md
+- `.pi/skills/timeline-events/SKILL.md`
+- `.agent/skills/timeline-events/SKILL.md`
 
-完整流程和验收规则以两个 SKILL.md 为准。引用同一渲染程序 scripts/timeline_events.py。
+两者保持字节级一致；共用 `scripts/render_html.py` 和 `scripts/timeline_events.py`，不会出现两个版本的渲染逻辑。
 
-## 直接运行仓库示例
+## 2. 直接体验：用户参考图复刻
 
-Python 3.10+。SVG 仅需要标准库；PNG 需要 CairoSVG。系统建议安装 Noto Sans CJK 中文字体。
+上传图片中的文字被逐条抄录到 `examples/reference-image-transcription.json`，以原图版式在 `2048×1280` 画布上还原：顶部粗标题、浅蓝概览栏、10 个上下交错节点、4 个阶段卡、3 个阅读提示及底部资料注释。
 
-~~~bash
+```bash
+python scripts/render_html.py examples/reference-image-transcription.json \
+  --reference-transcription \
+  --output dist/reference/index.html
+```
+
+浏览器打开 `dist/reference/index.html`，无需联网或安装前端依赖。手机会切换为纵向时间轴列表。
+
+> **事实提示**：此示例是用户上传图片的**忠实文字转录，不是独立事实审计**。原图中的事件、法律和关税数字尚未由本示例逐条核对。图片复刻和经核验研究是两种不同状态，不得混用。
+
+## 3. 严格研究模式（默认）
+
+为任一真实事件创建完整的 `data/<slug>.json`（按 `schemas/timeline.schema.json` 编写）；每个事件提供原始来源 URL 和 `source_ids`。缺乏来源时，默认不允许生成冒充审校完成的页面。
+
+```bash
+# 本仓库既有的研究数据示例：仅覆盖其内标明的历史时段
+python scripts/render_html.py examples/us-china-trade-war-verified.json \
+  --output dist/trade-war/index.html
+
+# 可选：SVG + PNG（PNG 需要 CairoSVG）
 python -m pip install -r requirements.txt
-python scripts/timeline_events.py examples/us-china-trade-war-verified.json --output dist/trade-war --format both
-~~~
+python scripts/timeline_events.py examples/us-china-trade-war-verified.json \
+  --output dist/trade-war/timeline --format both
+```
 
-查看 dist/trade-war.svg、dist/trade-war.png、dist/trade-war.sources.md。示例**仅涵盖截至2025年5月13日的若干已核验历史节点**，不是2026年的最新全景报道。需要当下事件，请让 Agent 重新检索权威来源并构造新的 JSON。
+HTML 引擎输出一个**独立的 HTML 文件**，可离线打开。PNG 与 SVG 为现有绘图引擎的独立版式输出，不等同于 HTML 的像素截图。
 
-不想安装依赖可先跑：
+## 4. 网站架构与分类
 
-~~~bash
-python scripts/timeline_events.py examples/us-china-trade-war-verified.json --output dist/trade-war --format svg
-~~~
+首页已包含：品牌与介绍、真实数量、事件浏览搜索、6 大类主题导航、证据流水线、可复制的 Agent 生成指令、项目使用文档。
 
-## 新事件的正确用法
+| 主分类 ID | 名称 | 主题示例 |
+|---|---|---|
+| `diplomacy` | 国际关系与贸易 | 双边谈判、贸易争端、制裁、国际组织 |
+| `policy` | 政策与法治 | 立法、司法、监管、公共治理 |
+| `technology` | 科技与产业 | AI、芯片、能源、产业升级 |
+| `business` | 商业与金融 | 企业发展、并购、宏观经济、资本市场 |
+| `society` | 社会与文化 | 社会事件、公共卫生、教育、文化 |
+| `history` | 历史与战争 | 战役、条约、政权与重要历史转折 |
 
-在能够读取本仓库 SKILL 的 Agent 中输入：
+`docs/data/catalog.json` 是唯一的目录数据源：分类数量和节点总量均从真实条目计算。当前仅收录一份**图片复刻演示**，其它类别是结构规划，不虚构文章填充版面。
 
-> 使用 timeline-events Skill，研究“中韩自贸协定第二阶段谈判”，截至今天，交叉核验，挑选 6–10 个关键节点，按照参考图片风格生成 SVG、PNG 和 sources.md。
+网站创作表单仅**生成可复制的 Agent 指令**；GitHub Pages 是静态托管，不能在浏览器里秘密调用模型或直接生产未核验的事件数据。
 
-Agent 按 SKILL 先搜索研究，再写出符合 schemas/timeline.schema.json 的 JSON，再调用上述脚本。**命令行本身不具备互联网检索或自动生成事实的能力**；只传一个字符串给脚本不会产生未经核验的历史叙述。
+更多信息架构：`references/site-architecture.md`。
 
-## 目录
+## 5. 目录
 
-~~~text
-timeline-events/
-├── .pi/skills/timeline-events/SKILL.md
-├── .agent/skills/timeline-events/SKILL.md
-├── AGENTS.md
-├── README.md
-├── scripts/
-│   ├── timeline_events.py
-│   └── verify_skill_sync.py
-├── schemas/timeline.schema.json
-├── references/
-│   ├── evidence-policy.md
-│   └── visual-spec.md
-├── examples/us-china-trade-war-verified.json
-├── tests/test_timeline.py
-└── .github/workflows/ci.yml
-~~~
+```text
+.pi/skills/timeline-events/SKILL.md    Pi 版入口
+.agent/skills/timeline-events/SKILL.md Agent 版入口
+AGENTS.md                               多角色职责、内容审计与开发协作规范
+references/                             视觉、来源、网站分类与研究规范
+schemas/timeline.schema.json            研究数据格式
+scripts/render_html.py                  HTML 渲染器（标准库）
+scripts/timeline_events.py              SVG/PNG 渲染器（原有）
+templates/timeline.{html,css}           可维护的 DOM/CSS 版式
+examples/                               可复现示例
+docs/                                   GitHub Pages 公开网站
+docs/events/us-china-trade-war/         用户图片 HTML 复刻示例
+tests/                                  回归测试
+.github/workflows/                      CI + Pages 发布
+```
 
-## 质量控制
+## 6. 质量测试
 
-数据强制要求至少一个真实来源、每个事件必须绑定 source_ids、日期有序、4–10 个节点、描述尺寸受控。过长的文本报错而非隐藏文字。SVG 可解析、PNG 有实际像素、证据文档与节点对应。CI 自动测试并上传示例图片 artifact。
-
-~~~bash
+```bash
 python -m unittest discover -s tests -v
 python scripts/verify_skill_sync.py
-~~~
+python scripts/check_site.py
+```
 
-## 安全与使用边界
+GitHub Actions 自动验证双目录 SKILL、HTML 渲染、旧 SVG/PNG 输出与静态站点链接，并上传示例产物。Pages 工作流在 `main` 更新时把 `docs/` 部署为项目站点。
 
-- 搜索得到的网址**不代表**事实已被核实：必须阅读原文与核实句子和数字。
-- 不能把官方一方的主张直接写成各方承认的定论。
-- 对历史事件可标月份；精确到日的信息必须来自证据。
-- 图片末端红点突出最后一项节点，**并不**自动代表重大突破或最终结局。
-- 未来计划只能标注 status=planned，不能称已经发生。
-- 不伪造来源、商标、水印或媒体署名；底部为实际来源数量与资料说明。
+**发布纪律**：只有研究 Agent 阅读原文并完成逐节点语义核对后，才能给目录条目标记 `verified`；渲染器校验 URL 形式不是事实审计。
 
-## 二次开发
+## 7. 维护与贡献
 
-渲染器没有网络调用，也不使用外部 API 密钥。可修改颜色、字号、布局样式，或将 JSON 生产流程连接至你自己的研究 Agent。若要扩展 10 个以上节点，请做多页布局，不要偷偷删减来源文字。
+- 变更前阅读 `AGENTS.md` 和目标 SKILL。
+- HTML 模板改动同步测试 2048×1280 参考图与手机纵向展示。
+- 提交任何事件需注明研究截止日、关键出处和残余争议。
+- 不向静态站点上传密钥、个人隐私、付费原始材料或未获授权的媒体图片。
+- 不在 `docs/` 直接手工修改生成的事件正文，变更应回到 JSON 再生成。

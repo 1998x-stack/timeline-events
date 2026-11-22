@@ -1,34 +1,48 @@
-name: Validate timeline Skill
+name: Validate Timeline Events
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
-  test-and-render:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - name: Install CJK fonts and PNG backend
+          python-version: '3.11'
+      - name: Install CJK fonts and SVG to PNG backend
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y fonts-noto-cjk
           python -m pip install -r requirements.txt
-      - name: Verify skill parity
+      - name: Check Agent Skill parity
         run: python scripts/verify_skill_sync.py
-      - name: Unit tests
+      - name: Test Python engines and site catalog
         run: python -m unittest discover -s tests -v
-      - name: Render example assets
-        run: python scripts/timeline_events.py examples/us-china-trade-war-verified.json --output dist/us-china-trade-war --format both
-      - name: Check outputs
+      - name: Validate site and relative links
+        run: python scripts/check_site.py
+      - name: Validate JavaScript syntax
+        run: node --check docs/assets/site.js
+      - name: Render reference HTML and researched HTML
         run: |
-          test -s dist/us-china-trade-war.svg
-          test -s dist/us-china-trade-war.png
-          test -s dist/us-china-trade-war.sources.md
-      - uses: actions/upload-artifact@v4
+          python scripts/render_html.py examples/reference-image-transcription.json --reference-transcription --output dist/reference/index.html
+          python scripts/render_html.py examples/us-china-trade-war-verified.json --output dist/verified/index.html
+      - name: Render existing SVG/PNG engine
+        run: python scripts/timeline_events.py examples/us-china-trade-war-verified.json --output dist/verified/timeline --format both
+      - name: Verify all outputs exist
+        run: |
+          test -s dist/reference/index.html
+          test -s dist/verified/index.html
+          test -s dist/verified/timeline.svg
+          test -s dist/verified/timeline.png
+          test -s dist/verified/timeline.sources.md
+          test -s docs/events/us-china-trade-war/index.html
+      - name: Upload tested sample outputs
+        uses: actions/upload-artifact@v4
         with:
-          name: timeline-example
+          name: timeline-events-samples
           path: dist/
