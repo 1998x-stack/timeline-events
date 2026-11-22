@@ -12,8 +12,10 @@ class SiteTests(unittest.TestCase):
 
     def test_catalog_is_factual_about_status(self):
         data=json.loads((ROOT/'docs/data/catalog.json').read_text(encoding='utf-8'))
-        self.assertEqual(len(data['events']),1)
-        self.assertEqual(data['events'][0]['status'],'reference_transcription')
+        self.assertGreaterEqual(len(data['events']), 1)
+        by_slug = {entry['slug']: entry for entry in data['events']}
+        self.assertEqual(by_slug['us-china-trade-war']['status'], 'reference_transcription')
+        self.assertEqual(by_slug['eight-crises']['status'], 'verified')
         self.assertEqual(len(data['taxonomies']),6)
 
     def test_site_form_does_not_claim_to_call_ai(self):
