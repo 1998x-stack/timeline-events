@@ -5,7 +5,13 @@
 [![CI](https://github.com/1998x-stack/timeline-events/actions/workflows/ci.yml/badge.svg)](https://github.com/1998x-stack/timeline-events/actions/workflows/ci.yml)
 [![Pages](https://github.com/1998x-stack/timeline-events/actions/workflows/pages.yml/badge.svg)](https://github.com/1998x-stack/timeline-events/actions/workflows/pages.yml)
 
-[访问 GitHub Pages 首页](https://1998x-stack.github.io/timeline-events/) · [参考图复刻样例](https://1998x-stack.github.io/timeline-events/events/us-china-trade-war/) · [规范 Skill](skills/timeline-events/SKILL.md) · [工程治理 AGENTS.md](AGENTS.md)
+[访问 GitHub Pages 首页](https://1998x-stack.github.io/timeline-events/) · [参考图复刻样例](https://1998x-stack.github.io/timeline-events/events/us-china-trade-war/) · [《八次危机》交互时间轴](https://1998x-stack.github.io/timeline-events/events/eight-crises/) · [规范 Skill](skills/timeline-events/SKILL.md) · [工程治理 AGENTS.md](AGENTS.md)
+
+## 新增研究专题：《八次危机》
+
+依据温铁军等《八次危机》的八个历史分期，新增 **8 个时间轴节点、19 条参考资料、8 章研究性详解**。页面区分著作提出的解释框架与政府统计、党史文献可独立核验的事件，尤其不把“软着陆”理解为没有农村和社会成本。
+
+[进入网页](https://1998x-stack.github.io/timeline-events/events/eight-crises/) · [研究审计与争议清单](research/eight-crises-source-audit.md) · [可再生 JSON](data/eight-crises-1949-2009.json)
 
 ## 为什么做这个项目
 

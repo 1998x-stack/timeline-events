@@ -157,6 +157,42 @@ def render_mobile(data: dict) -> str:
     return '\n'.join(sections)
 
 
+
+DEEP_READING_CSS = "\n.research-reading{margin-top:34px;padding-top:26px;border-top:1px solid #d3e1e7}\n.research-reading h2{font-size:clamp(22px,2.2vw,31px);line-height:1.4;color:#183a49;margin:0 0 12px}\n.reading-intro{color:#5c7280;font-size:15px;line-height:1.85;max-width:960px}\n.reading-nav{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 25px}\n.article-notes .reading-nav a{font-size:13px;letter-spacing:.04em;color:#245d7b;text-decoration:none;padding:8px 13px;border:1px solid #cadce5;border-radius:999px;background:#f7fafc;transition:background .22s ease,transform .22s ease}\n.article-notes .reading-nav a:hover{background:#e5f2f8;transform:translateY(-2px)}\n.research-chapter{scroll-margin-top:24px;padding:27px 30px;margin:0 0 16px;border-radius:13px;border:1px solid #dbe5ea;background:linear-gradient(125deg,#f9fbfc,#fff 65%);box-shadow:0 8px 28px rgba(22,54,70,.035)}\n.research-chapter:target{border-color:#6ca8c8;box-shadow:0 0 0 3px rgba(60,133,173,.09)}\n.chapter-index{font-size:12px;font-weight:700;letter-spacing:.14em;color:#668a9d;margin:0 0 10px}\n.research-chapter h3{font-size:clamp(19px,2vw,25px);line-height:1.4;margin:0 0 14px;color:#163c50}\n.research-chapter p:not(.chapter-index){line-height:1.93;margin:12px 0;font-size:15px;color:#354f5d}\n.research-chapter p strong{color:#183a49}\n.chapter-sources{border-top:1px solid #dfebef;padding-top:12px;margin-top:17px;display:flex;flex-wrap:wrap;gap:8px 13px;font-size:12px;align-items:center}\n.chapter-sources strong{color:#69818c}\n.article-notes .chapter-sources a{font-size:12px;line-height:1.5}\n@media(max-width:760px){.article-notes{padding:22px 17px}.research-chapter{padding:19px 16px}.research-chapter p:not(.chapter-index){font-size:14px}.reading-nav{gap:7px}}\n@media(prefers-reduced-motion:reduce){.article-notes .reading-nav a{transition:none}.article-notes .reading-nav a:hover{transform:none}}\n"
+
+
+def render_chapters(data: dict) -> str:
+    """Render expanded analytical commentary from the reviewed data model."""
+    chapters = data.get('chapters', [])
+    if not chapters:
+        return ''
+    lookup = {source['id']: source for source in data.get('sources', [])}
+    out = ['<section class="research-reading" id="deep-reading" aria-labelledby="reading-title">',
+           '<h2 id="reading-title">逐次展开：八次危机的背景、机制与政策回应</h2>',
+           '<p class="reading-intro">本部分为原创研究梳理，区分著作解释框架、可核实的历史事实与仍存在争议的归因；节点日期是各阶段代表史实，并不表示危机均在当月爆发。</p>',
+           '<nav class="reading-nav" aria-label="跳转至各次危机">']
+    for i, chapter in enumerate(chapters, 1):
+        out.append(f'<a href="#chapter-{i}">危机{i:02d}</a>')
+    out.append('</nav>')
+    labels = [('anchor', '日期定位'), ('background', '历史背景'),
+              ('mechanism', '解释机制'), ('response', '政策与传导'),
+              ('assessment', '评议与证据边界')]
+    for i, chapter in enumerate(chapters, 1):
+        out.append(f'<section class="research-chapter" id="chapter-{i}">')
+        out.append(f'<p class="chapter-index">CHAPTER {i:02d} / {e(chapter["period"])}</p>')
+        out.append(f'<h3>{e(chapter["title"])}</h3>')
+        for key, label in labels:
+            out.append(f'<p><strong>{label} · </strong>{e(chapter[key])}</p>')
+        out.append('<div class="chapter-sources"><strong>本章资料：</strong>')
+        for source_id in chapter.get('source_ids', []):
+            source = lookup.get(source_id)
+            if source:
+                out.append(f'<a target="_blank" rel="noopener noreferrer" href="{e(source["url"])}">{e(source["publisher"])} · {e(source["title"])}</a>')
+        out.append('</div></section>')
+    out.append('</section>')
+    return '\n'.join(out)
+
+
 def render_notes(data: dict, *, reference: bool, site_url: str | None=None) -> str:
     m=data['metadata']
     if reference:
@@ -167,10 +203,11 @@ def render_notes(data: dict, *, reference: bool, site_url: str | None=None) -> s
         notice='已依据用户提供的来源清单构建。注意：工具仅能检验 URL 结构和引用关联，来源语义核验仍由研究 Agent/编辑负责。'
         status='<p>'+e(notice)+'</p>'
         sources='<h3>引用来源</h3><ul>'+''.join('<li><a target="_blank" rel="noopener noreferrer" href="'+e(s['url'])+'">'+e(s['publisher'])+' · '+e(s['title'])+'</a></li>' for s in data['sources'])+'</ul>'
+    reading_nav='<a href="#deep-reading">阅读八次危机详解</a>' if data.get('chapters') else ''
     nav=(f'<a href="{e(site_url)}">返回时间轴资料库首页</a>' if site_url else '')
     return f'''<aside class="article-notes" aria-label="资料与使用说明">
 <h2>资料与核验说明</h2>{status}{sources}<p>展示方式：等距时间轴，节点距离不代表真实时间间隔；移动设备改用顺序事件列表。</p>
-<div class="article-tools">{nav}<a href="#timeline-shell">返回图片</a></div>
+<div class="article-tools">{nav}<a href="#timeline-shell">返回图片</a>{reading_nav}</div>{render_chapters(data)}
 </aside>'''
 
 
@@ -181,7 +218,7 @@ def render_html(data: dict, *, reference=False, site_url: str | None=None) -> st
     for key,value in {
         'PAGE_TITLE':e(data['metadata']['title'])+'｜Timeline Events',
         'PAGE_DESCRIPTION':e(data['metadata']['subtitle']),
-        'CSS':CSS.read_text(encoding='utf-8'),
+        'CSS':CSS.read_text(encoding='utf-8') + (DEEP_READING_CSS if data.get('chapters') else ''),
         'ARTBOARD':render_board(data),
         'MOBILE':render_mobile(data),
         'NOTES':render_notes(data,reference=reference,site_url=site_url),

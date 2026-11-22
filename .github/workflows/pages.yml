@@ -27,6 +27,8 @@ jobs:
         run: |
           python scripts/render_html.py skills/timeline-events/examples/reference-image-transcription.json --reference-transcription --output /tmp/reference-timeline.html --site-url ../../index.html
           cmp /tmp/reference-timeline.html docs/events/us-china-trade-war/index.html
+          python scripts/render_html.py data/eight-crises-1949-2009.json --output /tmp/eight-crises.html --site-url ../../index.html
+          cmp /tmp/eight-crises.html docs/events/eight-crises/index.html
       - name: Configure Pages (repository must enable GitHub Actions as Pages source)
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
